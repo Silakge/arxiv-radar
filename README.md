@@ -7,7 +7,7 @@ One tiny CLI + one GitHub Action: every day, arxiv-radar fetches fresh arXiv
 submissions, ranks them against *your* interests, and renders a beautiful
 digest you actually want to read.
 
-[![CI](https://github.com/YOUR_USERNAME/arxiv-radar/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/arxiv-radar/actions/workflows/ci.yml)
+[![CI](https://github.com/Silakge/arxiv-radar/actions/workflows/ci.yml/badge.svg)](https://github.com/Silakge/arxiv-radar/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](#-contributing)
@@ -80,7 +80,7 @@ digest generated against the live arXiv API in keyword mode — open
 ### Option B — local CLI
 
 ```bash
-pip install git+https://github.com/YOUR_USERNAME/arxiv-radar.git
+pip install git+https://github.com/Silakge/arxiv-radar.git
 
 arxiv-radar init    # creates radar.yaml interactively
 arxiv-radar run     # generates today's digest
@@ -215,7 +215,7 @@ Issues and PRs are welcome! For a feature, open an issue first so we can agree
 on scope. Dev setup:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/arxiv-radar && cd arxiv-radar
+git clone https://github.com/Silakge/arxiv-radar && cd arxiv-radar
 pip install -e ".[dev]"
 pytest -q          # all tests are offline & fast
 ```

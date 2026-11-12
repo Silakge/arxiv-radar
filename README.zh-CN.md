@@ -6,7 +6,7 @@
 一个小型 CLI + 一个 GitHub Action：每天自动抓取 arXiv 最新提交、按**你的**
 研究方向打分排序、生成值得认真读的精美日报。
 
-[![CI](https://github.com/YOUR_USERNAME/arxiv-radar/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/arxiv-radar/actions/workflows/ci.yml)
+[![CI](https://github.com/Silakge/arxiv-radar/actions/workflows/ci.yml/badge.svg)](https://github.com/Silakge/arxiv-radar/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
@@ -74,7 +74,7 @@ arXiv 线上 API 实跑生成的日报（关键词模式）——用浏览器打
 ### 方式 B — 本地 CLI
 
 ```bash
-pip install git+https://github.com/YOUR_USERNAME/arxiv-radar.git
+pip install git+https://github.com/Silakge/arxiv-radar.git
 
 arxiv-radar init    # 交互式生成 radar.yaml
 arxiv-radar run     # 生成今天的日报
@@ -200,7 +200,7 @@ API Key 从 `api_key_env` 指定的环境变量读取（默认 `PAPER_RADAR_API_
 欢迎 Issue 与 PR！新功能请先开 Issue 对齐范围。开发环境：
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/arxiv-radar && cd arxiv-radar
+git clone https://github.com/Silakge/arxiv-radar && cd arxiv-radar
 pip install -e ".[dev]"
 pytest -q          # 全部测试离线、秒级完成
 ```
