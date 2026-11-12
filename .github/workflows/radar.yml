@@ -1,0 +1,63 @@
+name: Radar
+
+# Daily paper digest. 08:00 UTC = 16:00 Beijing / 09:00 CET / 03:00 EST —
+# tweak the cron below to taste. `workflow_dispatch` lets you trigger a run
+# manually from the Actions tab (great for the very first test).
+on:
+  schedule:
+    - cron: "0 8 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: radar
+  cancel-in-progress: false
+
+jobs:
+  radar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install arxiv-radar
+        run: pip install .
+
+      - name: Run radar
+        env:
+          # Optional: only needed when llm.enabled is true in radar.yaml.
+          # Add it under Settings → Secrets and variables → Actions.
+          PAPER_RADAR_API_KEY: ${{ secrets.PAPER_RADAR_API_KEY }}
+        run: arxiv-radar run --config radar.yaml
+
+      - name: Commit digest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add digest/
+          if git diff --cached --quiet; then
+            echo "No new papers - nothing to commit."
+          else
+            git commit -m "radar: daily digest $(date +%F)"
+            git push
+          fi
+
+      # Optional: also post the digest as an issue (watchable, commentable,
+      # shows up in notifications). Enable by adding a repository variable
+      # RADAR_PUBLISH_ISSUE=true under Settings → Secrets and variables → Actions.
+      - name: Publish digest as an issue
+        if: ${{ vars.RADAR_PUBLISH_ISSUE == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          LATEST_MD=$(ls -t digest/*.md | head -1)
+          DATE=$(basename "$LATEST_MD" .md)
+          gh issue create \
+            --title "📡 Radar digest — $DATE" \
+            --body-file "$LATEST_MD"

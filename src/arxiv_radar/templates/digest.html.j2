@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ d.radar_name }} · {{ d.digest_date.isoformat() }}</title>
+<style>
+:root {
+  --bg: #f6f7f9; --card: #ffffff; --text: #1a1d21; --muted: #6b7280;
+  --accent: #2563eb; --border: #e5e7eb; --chip: #eef2ff; --chip-text: #3730a3;
+  --high-bg: #ecfdf5; --high-text: #047857; --mid-bg: #fffbeb; --mid-text: #b45309;
+  --low-bg: #f3f4f6; --low-text: #6b7280;
+  --tldr-bg: #f0f9ff; --tldr-border: #38bdf8;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1115; --card: #171a21; --text: #e6e8eb; --muted: #8b91a0;
+    --accent: #60a5fa; --border: #262b36; --chip: #1e2433; --chip-text: #a5b4fc;
+    --high-bg: #10241c; --high-text: #34d399; --mid-bg: #26200e; --mid-text: #fbbf24;
+    --low-bg: #1a1d24; --low-text: #8b91a0;
+    --tldr-bg: #12233a; --tldr-border: #38bdf8;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+.wrap { max-width: 860px; margin: 0 auto; padding: 36px 20px 60px; }
+header h1 { font-size: 27px; margin: 0 0 4px; letter-spacing: -0.02em; }
+header .date { color: var(--muted); margin-bottom: 14px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 6px; }
+.chip {
+  background: var(--chip); color: var(--chip-text); border-radius: 999px;
+  padding: 3px 12px; font-size: 12.5px; font-weight: 600;
+}
+.mode { color: var(--muted); font-size: 13px; }
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 18px 20px; margin: 14px 0;
+}
+.card:hover { box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08); }
+.card-head { display: flex; align-items: flex-start; gap: 14px; }
+.rank {
+  flex: none; width: 30px; height: 30px; border-radius: 50%;
+  background: var(--chip); color: var(--chip-text);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; margin-top: 2px;
+}
+.body { flex: 1; min-width: 0; }
+.badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+.badge { border-radius: 6px; padding: 1px 9px; font-size: 12px; font-weight: 600; }
+.badge.score { background: var(--chip); color: var(--chip-text); }
+.tier-high { background: var(--high-bg); color: var(--high-text); }
+.tier-medium { background: var(--mid-bg); color: var(--mid-text); }
+.tier-low { background: var(--low-bg); color: var(--low-text); }
+.badge.llm { background: var(--tldr-bg); color: var(--accent); }
+.title { font-size: 16.5px; font-weight: 700; line-height: 1.4; margin: 2px 0 4px; }
+.title a { color: var(--text); text-decoration: none; }
+.title a:hover { color: var(--accent); }
+.authors { color: var(--muted); font-size: 13.5px; }
+.tldr {
+  background: var(--tldr-bg); border-left: 3px solid var(--tldr-border);
+  padding: 10px 14px; border-radius: 0 10px 10px 0; margin: 12px 0 4px; font-size: 14.5px;
+}
+.tldr .label { color: var(--accent); font-weight: 700; }
+.tldr .reason { display: block; color: var(--muted); font-size: 13px; margin-top: 3px; }
+.keywords { margin-top: 10px; }
+.kw {
+  display: inline-block; background: var(--chip); color: var(--chip-text);
+  border-radius: 6px; padding: 1px 8px; font-size: 12px; margin: 2px 4px 2px 0;
+}
+.meta { color: var(--muted); font-size: 13px; margin-top: 8px; }
+.meta a { color: var(--accent); text-decoration: none; font-weight: 600; }
+details { margin-top: 10px; }
+summary { cursor: pointer; color: var(--muted); font-size: 13px; user-select: none; }
+.abstract { font-size: 14px; padding: 8px 2px 0; opacity: 0.92; }
+.empty {
+  background: var(--card); border: 1px dashed var(--border); border-radius: 14px;
+  padding: 40px 24px; text-align: center; color: var(--muted); margin-top: 20px;
+}
+footer { margin-top: 40px; color: var(--muted); font-size: 12.5px; text-align: center; }
+footer code { font-size: 11.5px; word-break: break-all; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>📡 {{ d.radar_name }}</h1>
+    <div class="date">{{ d.digest_date.isoformat() }} · window: last {{ d.window_days }} days</div>
+    <div class="chips">
+      <span class="chip">🆕 {{ d.papers | length }} new</span>
+      <span class="chip">🔍 {{ d.matched_count }} matched</span>
+      <span class="chip">📥 {{ d.fetched }} fetched</span>
+    </div>
+    <div class="mode">{% if d.llm_used %}🤖 LLM-enhanced (relevance-ranked, TL;DRs by the model — always verify against abstracts){% else %}🔎 keyword mode (transparent scoring, no API key){% endif %}</div>
+  </header>
+
+  {% if d.papers %}
+  {% for sp in d.papers %}
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">{{ loop.index }}</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score {{ sp.score }}</span>
+          <span class="badge tier-{{ sp.tier }}">{% if sp.tier == "high" %}🔥 high{% elif sp.tier == "medium" %}● medium{% else %}○ low{% endif %}</span>
+          {% if sp.llm_relevance is not none %}<span class="badge llm">🤖 relevance {{ "%.1f" | format(sp.llm_relevance) }}/10</span>{% endif %}
+        </div>
+        <div class="title"><a href="{{ sp.paper.abs_url }}">{{ sp.paper.title }}</a></div>
+        <div class="authors">{{ sp.paper.author_list }}</div>
+        {% if sp.llm_tldr %}
+        <div class="tldr">
+          <span class="label">TL;DR</span> {{ sp.llm_tldr }}
+          {% if sp.llm_reason %}<span class="reason">Why it matters: {{ sp.llm_reason }}</span>{% endif %}
+        </div>
+        {% endif %}
+        <div class="keywords">{% for term in sp.matched %}<span class="kw">{{ term }}</span>{% endfor %}</div>
+        <div class="meta">
+          {{ sp.paper.primary_category }} · published {{ sp.paper.published_str }} ·
+          <a href="{{ sp.paper.abs_url }}">abs</a> · <a href="{{ sp.paper.pdf_url }}">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">{{ sp.paper.abstract }}</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  {% endfor %}
+  {% else %}
+  <div class="empty">No new papers matched in the last {{ d.window_days }} days.<br>Try widening the window, adding keywords, or checking back tomorrow.</div>
+  {% endif %}
+
+  <footer>
+    Generated by <b>arxiv-radar</b> · {{ d.digest_date.isoformat() }}<br>
+    <code>query: {{ d.query }}</code>
+  </footer>
+</div>
+</body>
+</html>

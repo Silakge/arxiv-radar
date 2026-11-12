@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.eggs/
+
+# Environments
+.venv/
+venv/
+env/
+
+# Tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Radar output (keep committed in GitHub Actions forks if you want history)
+# digest/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
