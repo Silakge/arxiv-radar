@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLM &amp; RL Radar · 2026-11-13</title>
+<style>
+:root {
+  --bg: #f6f7f9; --card: #ffffff; --text: #1a1d21; --muted: #6b7280;
+  --accent: #2563eb; --border: #e5e7eb; --chip: #eef2ff; --chip-text: #3730a3;
+  --high-bg: #ecfdf5; --high-text: #047857; --mid-bg: #fffbeb; --mid-text: #b45309;
+  --low-bg: #f3f4f6; --low-text: #6b7280;
+  --tldr-bg: #f0f9ff; --tldr-border: #38bdf8;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1115; --card: #171a21; --text: #e6e8eb; --muted: #8b91a0;
+    --accent: #60a5fa; --border: #262b36; --chip: #1e2433; --chip-text: #a5b4fc;
+    --high-bg: #10241c; --high-text: #34d399; --mid-bg: #26200e; --mid-text: #fbbf24;
+    --low-bg: #1a1d24; --low-text: #8b91a0;
+    --tldr-bg: #12233a; --tldr-border: #38bdf8;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+.wrap { max-width: 860px; margin: 0 auto; padding: 36px 20px 60px; }
+header h1 { font-size: 27px; margin: 0 0 4px; letter-spacing: -0.02em; }
+header .date { color: var(--muted); margin-bottom: 14px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 6px; }
+.chip {
+  background: var(--chip); color: var(--chip-text); border-radius: 999px;
+  padding: 3px 12px; font-size: 12.5px; font-weight: 600;
+}
+.mode { color: var(--muted); font-size: 13px; }
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 18px 20px; margin: 14px 0;
+}
+.card:hover { box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08); }
+.card-head { display: flex; align-items: flex-start; gap: 14px; }
+.rank {
+  flex: none; width: 30px; height: 30px; border-radius: 50%;
+  background: var(--chip); color: var(--chip-text);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; margin-top: 2px;
+}
+.body { flex: 1; min-width: 0; }
+.badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+.badge { border-radius: 6px; padding: 1px 9px; font-size: 12px; font-weight: 600; }
+.badge.score { background: var(--chip); color: var(--chip-text); }
+.tier-high { background: var(--high-bg); color: var(--high-text); }
+.tier-medium { background: var(--mid-bg); color: var(--mid-text); }
+.tier-low { background: var(--low-bg); color: var(--low-text); }
+.badge.llm { background: var(--tldr-bg); color: var(--accent); }
+.title { font-size: 16.5px; font-weight: 700; line-height: 1.4; margin: 2px 0 4px; }
+.title a { color: var(--text); text-decoration: none; }
+.title a:hover { color: var(--accent); }
+.authors { color: var(--muted); font-size: 13.5px; }
+.tldr {
+  background: var(--tldr-bg); border-left: 3px solid var(--tldr-border);
+  padding: 10px 14px; border-radius: 0 10px 10px 0; margin: 12px 0 4px; font-size: 14.5px;
+}
+.tldr .label { color: var(--accent); font-weight: 700; }
+.tldr .reason { display: block; color: var(--muted); font-size: 13px; margin-top: 3px; }
+.keywords { margin-top: 10px; }
+.kw {
+  display: inline-block; background: var(--chip); color: var(--chip-text);
+  border-radius: 6px; padding: 1px 8px; font-size: 12px; margin: 2px 4px 2px 0;
+}
+.meta { color: var(--muted); font-size: 13px; margin-top: 8px; }
+.meta a { color: var(--accent); text-decoration: none; font-weight: 600; }
+details { margin-top: 10px; }
+summary { cursor: pointer; color: var(--muted); font-size: 13px; user-select: none; }
+.abstract { font-size: 14px; padding: 8px 2px 0; opacity: 0.92; }
+.empty {
+  background: var(--card); border: 1px dashed var(--border); border-radius: 14px;
+  padding: 40px 24px; text-align: center; color: var(--muted); margin-top: 20px;
+}
+footer { margin-top: 40px; color: var(--muted); font-size: 12.5px; text-align: center; }
+footer code { font-size: 11.5px; word-break: break-all; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>📡 LLM &amp; RL Radar</h1>
+    <div class="date">2026-11-13 · window: last 3 days</div>
+    <div class="chips">
+      <span class="chip">🆕 7 new</span>
+      <span class="chip">🔍 7 matched</span>
+      <span class="chip">📥 200 fetched</span>
+    </div>
+    <div class="mode">🔎 keyword mode (transparent scoring, no API key)</div>
+  </header>
+
+  
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">1</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 100</span>
+          <span class="badge tier-high">🔥 high</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.16174v1">JudgeMix: Judge-Guided Mixed-Rollout Data Synthesis for LLM Agents</a></div>
+        <div class="authors">Cheng-Yu Hsieh, Ting-Yao Hu, Sanjoy Chowdhury, et al.</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.LG · published 2026-11-12 ·
+          <a href="http://arxiv.org/abs/2611.16174v1">abs</a> · <a href="https://arxiv.org/pdf/2611.16174v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Supervised fine-tuning (SFT) on expert trajectories is a standard paradigm for training LLM agents. However, it suffers from a well-known training-inference distribution mismatch, calling for target-aware data synthesis strategies that ground the training data in the target model&#39;s native state distribution. To bridge this gap, emerging approaches incorporate the expert either to guide mixed rollouts alongside the target model, or to provide dense step-wise supervision. Nonetheless, existing methods apply expert assistance blind to the target model&#39;s inherent behavior: they either disrupt the rollout using sub-optimal random intervention heuristics, or they enforce indiscriminate uniform supervision that unnecessarily overwrites the model&#39;s already-correct actions. We introduce JudgeMix, a judge-guided data synthesis framework that dynamically interleaves the target model and expert based on step-wise semantic evaluations. JudgeMix queries expert guidance precisely when the target model struggles, ensuring high trajectory success rates while keeping the state distribution aligned with the target model. It additionally uses the judge evaluation to reweight expert supervision on different steps, preserving model&#39;s inherent valid behavior while correcting its errors. On two agentic tool-use benchmarks, AppWorld and AutomationBench, JudgeMix demonstrates consistent superior performance to existing methods, with improvements up to 10 pass@1 points.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">2</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 100</span>
+          <span class="badge tier-high">🔥 high</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.14326v1">When Should Agents Remember? Falsification-Gated Self-Evolution for LLM Agents</a></div>
+        <div class="authors">Runxuan Tang, Haoyu Gao, Yuyan Ding, et al.</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.AI · published 2026-11-10 ·
+          <a href="http://arxiv.org/abs/2611.14326v1">abs</a> · <a href="https://arxiv.org/pdf/2611.14326v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">LLM agents increasingly operate in long-horizon, verifier-rich environments, but current self-improvement mechanisms often write episode-derived lessons directly into memory, making local success an unreliable signal for reusable and safe knowledge. This paper addresses the core question of when an experience-derived behavioral update should be admitted into persistent agent state. We propose Falsification-Gated Self-Evolution (FGSE), a verifier-grounded framework that represents each candidate lesson as a structured hypothesis with an explicit precondition, behavior change, expected effect, and verifier. FGSE applies the hypothesis only in a temporary state, tests it on target-transfer, falsification, and archived-regression probes, and then commits, refines, or rejects it according to measured gain and risk. Across web, app, tool-use, and long-term memory benchmarks, FGSE achieves strong task performance, including 39.8 WebArena success rate, 78.8 AppWorld average completion, and 0.724/0.487 Pass$^1$ on $τ$-Retail/$τ$-Airline, while reducing falsification failures to 5.0%, regression damage to 1.3%, and harmful committed updates to 3.6%. These results suggest that testing memory updates as hypotheses supports more reliable long-term adaptation.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">3</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 75</span>
+          <span class="badge tier-high">🔥 high</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.14925v1">ToolTurns: Benchmarking LLM Agents in Multi-Turn Dialogue</a></div>
+        <div class="authors">Milad Gholami, Brendan King, Jeffrey Flanigan</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.CL · published 2026-11-11 ·
+          <a href="http://arxiv.org/abs/2611.14925v1">abs</a> · <a href="https://arxiv.org/pdf/2611.14925v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Tool-using language models are increasingly deployed in conversational settings, yet most large-scale tool-use benchmarks focus on isolated requests. We introduce ToolTurns, a benchmark of 2,620 problems spanning 1,827 tools and 11,004 API endpoints across 47 categories. Each dialogue begins with an intentionally underspecified request and continues through two context-dependent follow-ups, testing clarification, tool use, and retention of conversational context. We also introduce an open-source user simulator that reveals withheld context through dialogue and generates follow-up requests, with a checker--fixer pipeline for improving its turns. Across nine language models, the best agent resolves 69.6% of individual requests but completes only 39.8% of full dialogues. Under this evaluation protocol, every evaluated model receives lower success scores on follow-up requests than on the initial request, and dialogue-quality rubric scores and task success can rank models very differently. Paired turn-level evaluation shows that the checker--fixer reduces detected dialogue defects, and blind human evaluation favors the revised turns. ToolTurns provides a testbed for evaluating whether agents sustain task success across multi-turn dialogue with tools.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">4</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 25</span>
+          <span class="badge tier-low">○ low</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.16816v1">Outcome-Mass Alignment: Controlling Length-Dependent Trajectory Influence in Multi-Turn LLM Agent Reinforcement Learning</a></div>
+        <div class="authors">Dawei Zhang, Yubin Huangfu, Jessica Fan, et al.</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.CL · published 2026-11-12 ·
+          <a href="http://arxiv.org/abs/2611.16816v1">abs</a> · <a href="https://arxiv.org/pdf/2611.16816v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">To keep long interaction contexts tractable, stepwise group-relative training for multi-turn LLM agents materializes each source trajectory into multiple response rows and valid tokens. This expansion creates an outer-accounting problem distinct from within-trajectory credit assignment: row-based outcome statistics can count one episode outcome multiple times, while token-level reduction can assign unequal aggregate objective mass across trajectories. We term these effects outcome-statistics multiplicity and objective-mass imbalance. We introduce Outcome-Mass Alignment (OMA), a two-component method that makes both accounting choices explicit. Outcome Alignment computes outcome statistics over unique source trajectories, while Mass Alignment controls aggregate objective mass after within-trajectory aggregation of optimizer-native token objectives. Neither redesigns the base optimizer&#39;s credit assignment, importance ratios, or clipping. Across matched ALFWorld GRPO comparisons at two model scales, where failed trajectories typically expand much more than successful ones, OMA improves matched-horizon endpoint success by 7.0-9.4 percentage points. Ordinary WebShop exhibits weak or reversed expansion-outcome coupling and correspondingly mixed effects, whereas in a success-oriented WebShop setting, WebShop-SOL, OMA improves success nAUC from 0.399 to 0.511. Component ablations and GiGPO and GSPO comparisons further support component separability and cross-optimizer compatibility. These results show that trajectory expansion always defines an implicit weighting rule, but its practical effect depends on how expansion couples to outcomes and optimizer-native updates.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">5</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 25</span>
+          <span class="badge tier-low">○ low</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.15521v1">DecArena: Evaluating Large-Scale Decentralized Multi-Agent Collaboration</a></div>
+        <div class="authors">Jiali Cheng, Oleg Rokhlenko, Joo-Kyung Kim, et al.</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.MA · published 2026-11-11 ·
+          <a href="http://arxiv.org/abs/2611.15521v1">abs</a> · <a href="https://arxiv.org/pdf/2611.15521v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Emerging personal AI agents raise fundamental scalability and privacy concerns for centralized multi-agent systems (MASs), which rely on a global orchestrator with broad access to agents, resources, and communication. In decentralized environments, global visibility is unavailable. Agents need to proactively discover non-local resources (e.g. tools, skills), and collaborate with other agents to solve tasks. We study decentralized multi-agent collaboration under graph-constrained communication, a natural reflection of human structures. Each agent observes only its local state and can interact only with neighboring agents. We introduce a benchmark with synthetic scalable distributed tool calling with 100K+ tools. Our experiments reveal that recent LLM agents struggle to discover non-local relevant resources and collaborate in decentralized setting. Moreover, standard reinforcement learning fails to reliably overcome this limitation, suggesting that decentralized MAS needs more explicit harness mechanisms for effective collaboration, even using SOTA LLMs. We then present a strong baseline \textbf{GraphHarness}, combining topology-aware warmup with self-improving LLM-based routing. Results show that GraphHarness substantially improves task success (+48.5) and produces higher quality collaboration (+30.6), while using fewer costs (+34.0) than baselines.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">6</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 25</span>
+          <span class="badge tier-low">○ low</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.14514v1">Contrastive Discovery: Open-Ended Scientific Discovery over Competing Explanations</a></div>
+        <div class="authors">Ziang Liu, James J. Kim, Yijia Dai, Jennifer J. Sun</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.AI · published 2026-11-10 ·
+          <a href="http://arxiv.org/abs/2611.14514v1">abs</a> · <a href="https://arxiv.org/pdf/2611.14514v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">LLM agents are increasingly used for open-ended, data-driven scientific discovery, yet most of them evaluate hypotheses pointwise, testing an empirical claim $h$ only against its complement $\neg h$. When evidence rejects $h$, the agent learns that one explanation is unlikely but not which alternative the evidence supports. To recover that alternative, we introduce Contrastive Discovery, which replaces the single hypothesis with a contrast set, a scientific question paired with mutually exclusive and collectively exhaustive competing explanations. Each experiment is scored by how its evidence redistributes belief across the set, and the question is resolved when belief concentrates on one explanation. Because contrast sets change only the unit an agent proposes and scores, an existing agent can use them to re-evaluate evidence it has already collected or to guide its search. Across six domains, $89\%$ of the pointwise candidates with the largest belief shifts are rejections. On the same evidence, contrast sets resolve $73\%$ of these candidates to a specific alternative. When contrast sets guide search, the agent resolves $67\%$ more questions than pointwise surprisal under the same experiment budget. In a blinded study, $38$ human experts chose the same explanation on $78\%$ of resolved questions and on $82\%$ of questions where the pointwise agent rejected its hypothesis and stopped. Together, these results support explicit competing explanations as a way for discovery agents to resolve more scientific questions from the same evidence and validation budget.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">7</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 25</span>
+          <span class="badge tier-low">○ low</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.14019v2">Program-Aided Patchable Skill Evolution</a></div>
+        <div class="authors">Jiahao Wang, Yuqi Xiong, Qing Yang, et al.</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.CL · published 2026-11-10 ·
+          <a href="http://arxiv.org/abs/2611.14019v2">abs</a> · <a href="https://arxiv.org/pdf/2611.14019v2">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Agent skills have emerged as an effective means of enabling LLM agents to solve complex, interactive tasks by encoding reusable knowledge without modifying model parameters. Recent approaches further improve skill adaptation by distilling reusable experience from agent execution trajectories and evolving skills based on downstream task feedback. However, existing methods primarily represent skills as natural language documents, intertwining procedural logic with descriptive knowledge and making skills difficult to maintain and evolve. To address this limitation, we propose PASE (Program-Aided Patchable Skill Evolution), a program-aided framework that iteratively evolves skills by associating them with executable programs. Unlike prior approaches that encode trajectory-derived experience primarily in natural language, PASE separates reusable procedural logic into editable programs, enabling targeted updates to executable components while reducing the need to repeatedly revise natural language skills. Extensive experiments across diverse models and benchmarks demonstrate that PASE consistently outperforms all baselines, by achieving over 2.8% improvements. Further analyses show that PASE exhibits greater evolutionary stability and generalisation capability, highlighting the critical role of programmatic knowledge in skill evolution. We will release all data and code via GitHub.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  
+
+  <footer>
+    Generated by <b>arxiv-radar</b> · 2026-11-13<br>
+    <code>query: (cat:cs.CL OR cat:cs.LG) AND (all:&#34;large language model&#34; OR all:&#34;LLM agents&#34; OR all:&#34;reinforcement learning&#34;)</code>
+  </footer>
+</div>
+</body>
+</html>
