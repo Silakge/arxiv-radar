@@ -214,7 +214,7 @@ def cmd_run(args: argparse.Namespace) -> int:
 
     llm_used = False
     if cfg.llm.enabled and not args.no_llm and top:
-        candidates = top[: cfg.llm.max_papers]
+        candidates = [sp.paper for sp in top[: cfg.llm.max_papers]]
         verdicts = enrich(candidates, cfg.llm, cfg.interests)
         for sp in top:
             verdict = verdicts.get(sp.paper.arxiv_id)
