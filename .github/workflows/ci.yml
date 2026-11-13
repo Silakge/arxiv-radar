@@ -23,7 +23,10 @@ jobs:
       - name: Test
         run: pytest -q
       - name: Smoke test (offline paths only)
+        # bash shell so `< /dev/null` works on Windows runners too (PowerShell
+        # reserves `<`); a relative config path avoids /tmp differences.
+        shell: bash
         run: |
           arxiv-radar --version
-          arxiv-radar init --config /tmp/radar.yaml < /dev/null
-          arxiv-radar check --config /tmp/radar.yaml
+          arxiv-radar init --config radar-smoke.yaml < /dev/null
+          arxiv-radar check --config radar-smoke.yaml
