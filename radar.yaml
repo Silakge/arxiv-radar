@@ -1,0 +1,34 @@
+# 📡 arxiv-radar configuration
+# Edit your keywords/categories/interests below — the Radar workflow runs
+# this file daily (cron in .github/workflows/radar.yml, default 08:00 UTC).
+
+radar:
+  name: LLM & RL Radar        # digest title
+  days: 3                     # look-back window in days (1-30)
+  max_papers: 15              # max papers shown per digest
+
+arxiv:
+  categories:                 # arXiv categories to watch (OR-joined). [] = any
+    - cs.CL
+    - cs.LG
+  keywords:                   # used to fetch papers from arXiv (OR-joined)
+    - large language model
+    - LLM agents
+    - reinforcement learning
+  exclude: []                 # drop papers whose title+abstract contain any term
+
+interests:                    # scoring weights; higher = more relevant
+  - "LLM agents": 3
+  - "reward model": 2
+  - "RLHF": 2
+
+llm:                          # OPTIONAL - any OpenAI-compatible API.
+  enabled: false              # false = pure keyword mode, no API key needed.
+  base_url: https://api.openai.com/v1
+  model: gpt-4o-mini
+  api_key_env: PAPER_RADAR_API_KEY
+  max_papers: 15              # how many top candidates get an LLM pass
+
+output:
+  dir: digest
+  formats: [md, html, rss]
