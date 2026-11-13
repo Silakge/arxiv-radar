@@ -1,7 +1,9 @@
 import json
+from datetime import date
+
+import pytest
 
 from arxiv_radar.dedup import SeenStore
-from datetime import date
 
 
 def test_roundtrip(tmp_path):
@@ -42,9 +44,14 @@ def test_prune_removes_old_entries(tmp_path):
     assert store.is_seen("new")
 
 
-def test_corrupted_state_is_tolerated(tmp_path):
+@pytest.mark.parametrize(
+    "content",
+    [b"{ not json !!!", b"\xff", b'{"papers": null}', b'{"papers": []}'],
+    ids=["invalid-json", "invalid-utf8", "null-papers", "array-papers"],
+)
+def test_corrupted_state_is_tolerated(tmp_path, content):
     path = tmp_path / "seen.json"
-    path.write_text("{ not json !!!", encoding="utf-8")
+    path.write_bytes(content)
     store = SeenStore(str(path))
     assert len(store) == 0
     store.mark(["z"])

@@ -28,13 +28,13 @@ class SeenStore:
         try:
             with open(self.path, encoding="utf-8") as fh:
                 data = json.load(fh)
-            papers = data.get("papers", {}) if isinstance(data, dict) else {}
-            self._seen = {
-                str(k): str(v) for k, v in papers.items() if isinstance(v, str)
-            }
-        except (json.JSONDecodeError, OSError):
+        except (json.JSONDecodeError, UnicodeDecodeError, OSError):
             # A corrupted state file should never block a fresh digest.
-            self._seen = {}
+            data = None
+        papers = data.get("papers") if isinstance(data, dict) else None
+        if not isinstance(papers, dict):
+            papers = {}
+        self._seen = {key: value for key, value in papers.items() if isinstance(value, str)}
 
     def is_seen(self, arxiv_id: str) -> bool:
         return arxiv_id in self._seen
