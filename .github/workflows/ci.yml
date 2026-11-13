@@ -12,7 +12,16 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        # Python 3.9 is EOL and no longer in setup-python's manifest for the
+        # ubuntu-latest (26.04) image — pin it to ubuntu-24.04 there.
+        include:
+          - os: ubuntu-24.04
+            python-version: "3.9"
+          - os: windows-latest
+            python-version: "3.9"
+          - os: macos-latest
+            python-version: "3.9"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
