@@ -1,6 +1,10 @@
 import argparse
+import json
+from datetime import datetime, timezone
+from unittest.mock import Mock
 
 import arxiv_radar.cli as cli
+from arxiv_radar.models import Paper
 
 
 def _args(config, force=False):
@@ -48,3 +52,62 @@ def test_init_force_overwrites(tmp_path, monkeypatch):
 def test_main_reports_config_errors(capsys):
     assert cli.main(["run", "--config", "no-such-file.yaml"]) == 2
     assert "Configuration problem" in capsys.readouterr().err
+
+
+def test_run_with_llm_enriches_and_reranks_papers(tmp_path, monkeypatch):
+    """Exercise the real LLM prompt and response handling without network calls."""
+    config = tmp_path / "radar.yaml"
+    config.write_text(
+        "radar:\n  max_papers: 3\n"
+        "arxiv:\n  keywords: [agents]\n"
+        "llm:\n  enabled: true\n  max_papers: 2\n"
+        "output:\n  formats: [md]\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("PAPER_RADAR_API_KEY", "test-key")
+    published = datetime.now(timezone.utc)
+    papers = [
+        Paper(
+            arxiv_id=f"2611.0000{i}v1",
+            title=title,
+            abstract="We study agents.",
+            authors=["Alice"],
+            published=published,
+            updated=published,
+            primary_category="cs.AI",
+            categories=["cs.AI"],
+            abs_url=f"https://arxiv.org/abs/2611.0000{i}v1",
+            pdf_url=f"https://arxiv.org/pdf/2611.0000{i}v1",
+        )
+        for i, title in enumerate(
+            ["Agents teaching agents", "Planning with agents", "Planning study"], 1
+        )
+    ]
+    monkeypatch.setattr(cli, "fetch_recent", lambda cfg: ('all:"agents"', papers))
+    verdicts = {
+        papers[0].arxiv_id: {"relevance": 6, "tldr": "Teaching summary.", "reason": "Teaching."},
+        papers[1].arxiv_id: {"relevance": 9, "tldr": "Planning summary.", "reason": "Planning."},
+    }
+    post = Mock()
+    post.return_value.json.return_value = {
+        "choices": [{"message": {"content": json.dumps(verdicts)}}]
+    }
+    monkeypatch.setattr("arxiv_radar.llm.requests.post", post)
+    output = tmp_path / "digest"
+
+    assert cli.main(["run", "--config", str(config), "--out", str(output)]) == 0
+
+    post.assert_called_once()
+    prompt = post.call_args.kwargs["json"]["messages"][1]["content"]
+    for paper in papers[:2]:
+        assert f"[{paper.arxiv_id}] {paper.title}" in prompt
+        assert f"Abstract: {paper.abstract}" in prompt
+    assert papers[2].arxiv_id not in prompt  # Respect llm.max_papers.
+    digest_path, = output.glob("*.md")
+    digest = digest_path.read_text(encoding="utf-8")
+    assert "LLM-enhanced" in digest
+    assert "Teaching summary." in digest
+    assert "Planning summary." in digest
+    assert "relevance 9.0/10" in digest
+    assert digest.index(papers[1].title) < digest.index(papers[0].title)
+    assert digest.index(papers[0].title) < digest.index(papers[2].title)
