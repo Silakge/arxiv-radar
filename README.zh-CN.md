@@ -24,7 +24,7 @@
 **arxiv-radar 解决的是"阅读清单"问题。** 它每天早上自动完成无聊的部分：
 抓取 → 过滤 → 打分 → 排版。评分默认用完全透明的关键词模式（**无需 API Key、
 零成本**），也可以开启 LLM 精筛（OpenAI / DeepSeek / GLM / Ollama 等任意
-OpenAI 兼容接口）。
+OpenAI 兼容接口）
 
 ```text
 $ arxiv-radar run
