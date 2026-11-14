@@ -48,6 +48,11 @@ dev = ["pytest>=7.0"]
 [project.scripts]
 arxiv-radar = "arxiv_radar.cli:main"
 
+[project.urls]
+Homepage = "https://github.com/Silakge/arxiv-radar"
+Repository = "https://github.com/Silakge/arxiv-radar"
+Issues = "https://github.com/Silakge/arxiv-radar/issues"
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
