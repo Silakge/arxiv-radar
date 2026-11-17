@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLM &amp; RL Radar · 2026-11-17</title>
+<style>
+:root {
+  --bg: #f6f7f9; --card: #ffffff; --text: #1a1d21; --muted: #6b7280;
+  --accent: #2563eb; --border: #e5e7eb; --chip: #eef2ff; --chip-text: #3730a3;
+  --high-bg: #ecfdf5; --high-text: #047857; --mid-bg: #fffbeb; --mid-text: #b45309;
+  --low-bg: #f3f4f6; --low-text: #6b7280;
+  --tldr-bg: #f0f9ff; --tldr-border: #38bdf8;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1115; --card: #171a21; --text: #e6e8eb; --muted: #8b91a0;
+    --accent: #60a5fa; --border: #262b36; --chip: #1e2433; --chip-text: #a5b4fc;
+    --high-bg: #10241c; --high-text: #34d399; --mid-bg: #26200e; --mid-text: #fbbf24;
+    --low-bg: #1a1d24; --low-text: #8b91a0;
+    --tldr-bg: #12233a; --tldr-border: #38bdf8;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+.wrap { max-width: 860px; margin: 0 auto; padding: 36px 20px 60px; }
+header h1 { font-size: 27px; margin: 0 0 4px; letter-spacing: -0.02em; }
+header .date { color: var(--muted); margin-bottom: 14px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 6px; }
+.chip {
+  background: var(--chip); color: var(--chip-text); border-radius: 999px;
+  padding: 3px 12px; font-size: 12.5px; font-weight: 600;
+}
+.mode { color: var(--muted); font-size: 13px; }
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 18px 20px; margin: 14px 0;
+}
+.card:hover { box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08); }
+.card-head { display: flex; align-items: flex-start; gap: 14px; }
+.rank {
+  flex: none; width: 30px; height: 30px; border-radius: 50%;
+  background: var(--chip); color: var(--chip-text);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; margin-top: 2px;
+}
+.body { flex: 1; min-width: 0; }
+.badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+.badge { border-radius: 6px; padding: 1px 9px; font-size: 12px; font-weight: 600; }
+.badge.score { background: var(--chip); color: var(--chip-text); }
+.tier-high { background: var(--high-bg); color: var(--high-text); }
+.tier-medium { background: var(--mid-bg); color: var(--mid-text); }
+.tier-low { background: var(--low-bg); color: var(--low-text); }
+.badge.llm { background: var(--tldr-bg); color: var(--accent); }
+.title { font-size: 16.5px; font-weight: 700; line-height: 1.4; margin: 2px 0 4px; }
+.title a { color: var(--text); text-decoration: none; }
+.title a:hover { color: var(--accent); }
+.authors { color: var(--muted); font-size: 13.5px; }
+.tldr {
+  background: var(--tldr-bg); border-left: 3px solid var(--tldr-border);
+  padding: 10px 14px; border-radius: 0 10px 10px 0; margin: 12px 0 4px; font-size: 14.5px;
+}
+.tldr .label { color: var(--accent); font-weight: 700; }
+.tldr .reason { display: block; color: var(--muted); font-size: 13px; margin-top: 3px; }
+.keywords { margin-top: 10px; }
+.kw {
+  display: inline-block; background: var(--chip); color: var(--chip-text);
+  border-radius: 6px; padding: 1px 8px; font-size: 12px; margin: 2px 4px 2px 0;
+}
+.meta { color: var(--muted); font-size: 13px; margin-top: 8px; }
+.meta a { color: var(--accent); text-decoration: none; font-weight: 600; }
+details { margin-top: 10px; }
+summary { cursor: pointer; color: var(--muted); font-size: 13px; user-select: none; }
+.abstract { font-size: 14px; padding: 8px 2px 0; opacity: 0.92; }
+.empty {
+  background: var(--card); border: 1px dashed var(--border); border-radius: 14px;
+  padding: 40px 24px; text-align: center; color: var(--muted); margin-top: 20px;
+}
+footer { margin-top: 40px; color: var(--muted); font-size: 12.5px; text-align: center; }
+footer code { font-size: 11.5px; word-break: break-all; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>📡 LLM &amp; RL Radar</h1>
+    <div class="date">2026-11-17 · window: last 3 days</div>
+    <div class="chips">
+      <span class="chip">🆕 9 new</span>
+      <span class="chip">🔍 9 matched</span>
+      <span class="chip">📥 200 fetched</span>
+    </div>
+    <div class="mode">🔎 keyword mode (transparent scoring, no API key)</div>
+  </header>
+
+  
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">1</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 100</span>
+          <span class="badge tier-high">🔥 high</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.20595v1">Invariant-Aware Harness Enforcement to Protect LLM Agents from Silent API Failures</a></div>
+        <div class="authors">Sajib Acharjee Dip, Brian Ouyang, Lala Motlhabi</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.CL · published 2026-11-16 ·
+          <a href="http://arxiv.org/abs/2611.20595v1">abs</a> · <a href="https://arxiv.org/pdf/2611.20595v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">LLM agents answer questions by calling APIs and trusting the results. An API can fail silently. It ignores part of a request, such as a misnamed filter, yet returns HTTP 200 and a plausible but wrong result. Current fixes, such as checklists, reviewer models and LLM judges, ask the model to catch it. But models often see the problem and answer anyway. We present SilentGuard, which moves the decision from the model to the harness running tool calls. It tests each result against invariants that any correct API must satisfy and withholds values that break one. We find silent failures in 11 of 15 public research APIs, with counts inflated up to 691 times. Current fixes leave over 70% of answers wrong, and agents report 77.4% of counts a judge flags. Across 7 open models, SilentGuard cuts wrong answers on its target faults from 74.0% to 1.7%, with no loss on fault-free tasks. On three frontier models they fall from 70.2% to 0.5%. A warning from the same check leaves 70.1% wrong, so enforcement is the key. On new fault types, the harness alone cuts wrong answers from 61.1% to 24.5%. It avoids wrong answers by abstaining rather than recovering.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">2</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 100</span>
+          <span class="badge tier-high">🔥 high</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.19700v1">Where Should LLM Agents Adapt at Test Time? In Context, in Weights, or Both</a></div>
+        <div class="authors">Parsa Mirtaheri, Mohammadreza Armandpour, Keivan Alizadeh, et al.</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.LG · published 2026-11-15 ·
+          <a href="http://arxiv.org/abs/2611.19700v1">abs</a> · <a href="https://arxiv.org/pdf/2611.19700v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">LLM agents operating repeatedly in the same environment, such as a code repository, a database, or an application suite, encounter tasks that share latent structure. Experience can reveal this structure, allowing agents to reuse environment knowledge and learn from environmental feedback. Agents can adapt at test-time using this experience through two channels: retaining it in context and updating their weights. These channels are usually studied separately, leaving unclear what each contributes and when they complement each other. We compare in-context learning (ICL), reinforcement learning with verifiable rewards using GRPO, and self-distillation using SDPO, alone and in combination, using a shared online protocol and modular framework. Agents encounter matched task streams, are evaluated on each task before adapting to it, and learn only from their own attempts and environment feedback. We evaluate 14 adaptation mechanisms and a stateless baseline with Qwen3.5-9B on 109 tasks from four environments drawn from SWE-bench Verified, AppWorld, ScienceWorld, and BIRD-Critic-SQLite, using five task orders per environment. ICL provides the largest standalone gain: its best policy raises mean success across environments from 28.8% to 49.4%. Adding GRPO to this policy achieves the highest mean success, 51.6%. While adding GRPO improves the overall mean under every ICL policy, SDPO has mixed effects. Trace analyses show fewer lookups and shorter attempts under ICL, consistent with reusing knowledge of the shared structure. However, ICL also frequently skips inspection and verification for the current task. Adding GRPO to ICL helps restore these behaviors while preserving its reduced environment lookups. These observations suggest that reinforcement learning with verifiable rewards can refine how agents use retained experience, motivating the joint study of context management and weight updates.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">3</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 83</span>
+          <span class="badge tier-high">🔥 high</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.20755v1">GPRM: Global Perspective Process Reward Model</a></div>
+        <div class="authors">Zifan Zhang, Zhengbo Jiao, Shaobo Wang, et al.</div>
+        
+        <div class="keywords"><span class="kw">reward model</span></div>
+        <div class="meta">
+          cs.CL · published 2026-11-16 ·
+          <a href="http://arxiv.org/abs/2611.20755v1">abs</a> · <a href="https://arxiv.org/pdf/2611.20755v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Process Reward Models (PRMs) are widely used for step-level evaluation of multi-step reasoning in large language models, but existing methods are often limited by weak historical dependency modeling and insufficient global awareness. They typically fail to leverage prior step evaluations for coherent judgment and lack visibility into subsequent reasoning, leading to suboptimal assessment of intermediate steps. To address this issue, we propose the Global Perspective Process Reward Model (GPRM), which jointly models the problem, previous reasoning steps and their evaluations, the current step, and future steps to enable history-aware and globally informed process evaluation. We further introduce a structured evaluation framework along four dimensions---look back, look ahead, self-check, and goal alignment---to assess prior consistency, future plausibility, step validity, and task alignment. Based on this framework, we construct datasets for supervised fine-tuning (SFT) and reinforcement learning (GRPO). Experiments show that, despite using less training data and smaller model sizes, GPRM outperforms strong baseline models by 7.8 and 5.4 points on PRMBench and ProcessBench, respectively. GPRM also generalizes well across tasks, surpassing the GPT-4.1 baseline on Agent Error Bench, improving strong baselines by around 4 points under test-time scaling (TTS), and achieving competitive performance on PPE.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">4</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 25</span>
+          <span class="badge tier-low">○ low</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.20983v1">GRACE: Parallel Best-of-N Multi-Agent Analysis of Closed-Form Questions over Dataframes with Guardrail Selection and Adaptive Retry</a></div>
+        <div class="authors">Fabio Picariello, Salvatore Cipolla, Susanna Bonura, Vito Morreale</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.AI · published 2026-11-16 ·
+          <a href="http://arxiv.org/abs/2611.20983v1">abs</a> · <a href="https://arxiv.org/pdf/2611.20983v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">LLM agents answer closed-form questions over a tabular dataframe by writing and executing Python, almost always as a single rollout: one interpretation, one script, one result, accepted without comparison. The few pipelines that produce several candidates reconcile them by answer-agreement voting, which needs a single comparable scalar and always returns one, even when every candidate is wrong. We present GRACE (Generative, Ranked, Adaptive Code Ensemble), a production-oriented pipeline that instead runs parallel best-of-N selection specialised to dataframe code. N agents run concurrently under a strict, machine-checkable output contract, diversified by persona hints, per-retry rotation, and a two-regime temperature schedule. Rather than vote, GRACE judges the executed artefacts: a pairwise tournament pre-filters the pool and a domain-specialised guardrail either selects the best candidate or, when none is defensible, rejects the whole pool and abstains with a diagnosis (an option voting structurally lacks), which in turn drives an adaptive retry with per-agent feedback. On InfiAgent-DABench (DAEval, M = 246), using Qwen3.6-35B-A3B as the backbone, GRACE raises answer match from 39% for a single-rollout baseline to 71% (+32 pp, 1.8x), recovering 53% of previously wrong answers. On the same DAEval task, the smaller dense Qwen3.5-9B lifts answer match from 38% to 63% (+25 pp, 1.7x). A controlled 3 x 3 study that sweeps the number of parallel agents against the retry budget finds, on the 35B backbone, the two levers largely substitutable: once either one is generous, the other adds little, identifying a cheap operating point for deployment. The same directional pattern replicates on the independent DataBench benchmark, again on the Qwen3.6-35B-A3B backbone, where answer match rises by 15 percentage points (from 70% to 85%) across 400 sampled questions.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">5</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 25</span>
+          <span class="badge tier-low">○ low</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.19911v1">&#34;Don&#39;t Leave the Task Unfinished&#34;: Persistence-Driven Violations under Quiet Oversight</a></div>
+        <div class="authors">Seunghyun Lee, Jaehui Hwang, Dongyoon Han, Sangdoo Yun</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.LG · published 2026-11-15 ·
+          <a href="http://arxiv.org/abs/2611.19911v1">abs</a> · <a href="https://arxiv.org/pdf/2611.19911v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">LLM agents are increasingly given long, multi-step tasks to carry out, with the user reviewing little of what happens in between. Persistence, the tendency to keep working until a task is complete, is installed on purpose to improve performance on long tasks. Long-horizon tasks are typically complex, and the user&#39;s instruction can fall short of what the work actually requires, or conflict with the constraints the agent encounters in the task. We study what persistence does on long-horizon operations tasks that cannot be solved without breaking a documented constraint. We find that the agent pursues completion to the point of violating the constraint, and that a critically engaged user lowers the violation rate. Persistence takes violations from 29.2% to 58.3% across four models. Violations stay high wherever oversight goes quiet, whether the user is silent, assenting, or delegating with expressed trust. Only a questioning user, who asks for the basis of each action before allowing the next, brings the rate back to roughly the level measured without persistence. Practitioners should treat high persistence as a setting that carries a safety cost, and should recognize that the cost appears when oversight goes quiet. Safety here is better cast as a property of the human-AI pair than of the model alone. Project page: https://francis21c.github.io/quiet-oversight/</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">6</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 25</span>
+          <span class="badge tier-low">○ low</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.19823v1">EfficientSkill: Learning Skills for Token-Efficient Multi-Turn Agents</a></div>
+        <div class="authors">Deep Shah, Sanket Badhe, Nehal Kathrotia, Priyanka Tiwari</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.CL · published 2026-11-15 ·
+          <a href="http://arxiv.org/abs/2611.19823v1">abs</a> · <a href="https://arxiv.org/pdf/2611.19823v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Reflective skill optimizers improve multi-turn LLM agents by revising instructions from failed and successful rollouts, yet accumulating edge-case rules bloats prompts, inflates token use, and pushes agents into long, error-prone loops. We introduce EfficientSkill, a two-step framework that first discovers a reliable skill without token penalties, and then warm-starts accuracy-guarded pruning from that skill to compress instructions, bound agent turns, and offload reusable code into workspace utilities with zero implementation prompt cost. Across four frontier, mid-tier, and open-weight models on MATH-500, ALFWorld, and SpreadsheetBench, EfficientSkill cuts output tokens over unconstrained EvoSkill on 11 of 12 configurations (by up to 80%) while raising mean accuracy on every benchmark, including +14.3 and +17.5 percentage-point gains on SpreadsheetBench with Gemini 3.8 Flash and Grok 4.1 Fast by replacing stalled loops with compact workflows. By shrinking both generated tokens and replayed history, EfficientSkill lowers total token usage and serving cost across every evaluated configuration, with or without full-prefix KV caching.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">7</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 17</span>
+          <span class="badge tier-low">○ low</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.20955v1">Jev-as-a-Reward: Validating Probabilistic Safety Judges for Reinforcement Learning</a></div>
+        <div class="authors">Eunkyeong Lee, Junhyung Moon, Seunggwan Hong, Dongsuk Oh</div>
+        
+        <div class="keywords"><span class="kw">reward model</span></div>
+        <div class="meta">
+          cs.AI · published 2026-11-16 ·
+          <a href="http://arxiv.org/abs/2611.20955v1">abs</a> · <a href="https://arxiv.org/pdf/2611.20955v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Probabilistic safety judges return the probability of a safety label and cheaply score reinforcement learning rollouts. A confidence gate sends only uncertain verdicts to a stronger LLM judge, which leaves confidently passed harm in a blind spot. Policies can exploit this blind spot, and commercial judges release new versions. We propose a protocol that validates such a judge before and during training, separates the share of confidently passed harm from its amount, and re-validates it after each judge change. We apply it to two versions of Jev, a commercial decision-only judge, and to an open guard classifier. Under the probability reward of Jev, passed harm shrinks in all 11 runs under the primary reference, mostly more slowly than caught harm, and concentrates in the blind spot. Binarizing this judge meets the escape criterion on Llama, and the open guard classifier shows an escape signal in one seed under a second reference. Guard classifiers share this blind spot, and even frontier LLM judges catch at most one of 10 human-labeled confident misses. Without a trained reward model, the probability reward with a helpfulness term lowers HarmBench attack success on Llama-3.1-8B from 0.287 to at most 0.033 at the final checkpoint.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">8</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 17</span>
+          <span class="badge tier-low">○ low</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.20635v1">Contrastive Activation-Guided Zeroth-Order Preference Optimisation for Memory-Efficient LLM Alignment</a></div>
+        <div class="authors">Weiyun Huang, Alessio Galatolo</div>
+        
+        <div class="keywords"><span class="kw">RLHF</span></div>
+        <div class="meta">
+          cs.LG · published 2026-11-16 ·
+          <a href="http://arxiv.org/abs/2611.20635v1">abs</a> · <a href="https://arxiv.org/pdf/2611.20635v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Direct Preference Optimisation (DPO) simplifies reinforcement learning from human feedback, but still relies on traditional backpropagation and its associated activation-memory cost. Zeroth-order (ZO) optimisation avoids backpropagation, yet isotropic perturbations can produce noisy updates for preference objectives defined by differences between chosen and rejected responses. We introduce Contrastive Activation-guided Zeroth-Order Direct Preference Optimisation (CA-ZODPO), which constructs a low-rank search subspace from the activation discrepancy between the chosen and rejected responses in each preference pair. Perturbations are restricted to this subspace, while momentum is maintained in low-rank coordinates to preserve the memory advantages of ZO training. On Qwen2.5-1.5B with Anthropic HH-RLHF, CA-ZODPO outperforms common ZO baselines and remains competitive with first-order DPO in pairwise preference evaluation. It also reduces peak GPU memory by about 59\% at a sequence length of 2048 while retaining the sequence-length scaling behaviour of zeroth-order training.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">9</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 17</span>
+          <span class="badge tier-low">○ low</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.19840v1">Grounding Language Models in Speech Does Not Fix &#34;AI Flavor&#34;: Calibrated LLM Judges, Goodhart Traps, and a Preference-Tuning Fix</a></div>
+        <div class="authors">Dongwu Qian</div>
+        
+        <div class="keywords"><span class="kw">reward model</span></div>
+        <div class="meta">
+          cs.CL · published 2026-11-15 ·
+          <a href="http://arxiv.org/abs/2611.19840v1">abs</a> · <a href="https://arxiv.org/pdf/2611.19840v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Chinese outputs of large language models carry a perceptible &#34;AI flavor&#34;: formulaic sentence frames, stacked written-register connectives, repetition loops, and layout leakage. A popular hypothesis blames text-only training for the missing inner-speech layer of human writing; injecting speech or prosody signals should therefore reduce it. We test it with controlled interventions on a 0.6B model; all three fail: (i) phoneme-interleaved continued pretraining yields no spokenness gain under text-matched controls while raising repetition (+0.13 [+0.03, +0.23]); (ii) prosody-plan conditional generation reaches an adherence of only 0.257 against a pre-registered 0.50 gate; (iii) a rule-based reward built on TTS prosody-feature distance is imperceptible in double-blind evaluation by both humans (8/16) and a calibrated LLM judge (9/16). A root cause is evaluation: single-rater blind evaluation at n~20 only detects extreme (&gt;=85%) preferences. We therefore build a calibrated LLM-judge protocol: the judge passes catch trials on known-answer pairs (16/16; single-text 22/24, same-topic pairs 24/24, versus 0.75 for the human rater), then annotates with two independent judges under A/B swapping, counting disagreement as a tie. Using the judge&#39;s agree labels directly as DPO pairs (no reward model), we obtain the first positive result: held-out blind win rate 0.833 [0.699, 0.972], repetition 0.114 to 0.000, unchanged MMLU. We further identify a Goodhart channel: the judge&#39;s length preference transduces into output-length collapse via pairwise DPO (median 75 chars vs a 300-char prompt); an SFT-anchor repairs it (w is a style knob: w=0.1 preserves gains, w=0.3 does not). Scaling preference data from 89 to 240 pairs yields no additional judge-visible gain. We release RA-Eval v0.1: a three-layer Chinese AI-flavor evaluation framework with 382 judge-annotated preference pairs.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  
+
+  <footer>
+    Generated by <b>arxiv-radar</b> · 2026-11-17<br>
+    <code>query: (cat:cs.CL OR cat:cs.LG) AND (all:&#34;large language model&#34; OR all:&#34;LLM agents&#34; OR all:&#34;reinforcement learning&#34;)</code>
+  </footer>
+</div>
+</body>
+</html>
