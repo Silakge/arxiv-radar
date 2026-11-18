@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLM &amp; RL Radar · 2026-11-18</title>
+<style>
+:root {
+  --bg: #f6f7f9; --card: #ffffff; --text: #1a1d21; --muted: #6b7280;
+  --accent: #2563eb; --border: #e5e7eb; --chip: #eef2ff; --chip-text: #3730a3;
+  --high-bg: #ecfdf5; --high-text: #047857; --mid-bg: #fffbeb; --mid-text: #b45309;
+  --low-bg: #f3f4f6; --low-text: #6b7280;
+  --tldr-bg: #f0f9ff; --tldr-border: #38bdf8;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1115; --card: #171a21; --text: #e6e8eb; --muted: #8b91a0;
+    --accent: #60a5fa; --border: #262b36; --chip: #1e2433; --chip-text: #a5b4fc;
+    --high-bg: #10241c; --high-text: #34d399; --mid-bg: #26200e; --mid-text: #fbbf24;
+    --low-bg: #1a1d24; --low-text: #8b91a0;
+    --tldr-bg: #12233a; --tldr-border: #38bdf8;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+.wrap { max-width: 860px; margin: 0 auto; padding: 36px 20px 60px; }
+header h1 { font-size: 27px; margin: 0 0 4px; letter-spacing: -0.02em; }
+header .date { color: var(--muted); margin-bottom: 14px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 6px; }
+.chip {
+  background: var(--chip); color: var(--chip-text); border-radius: 999px;
+  padding: 3px 12px; font-size: 12.5px; font-weight: 600;
+}
+.mode { color: var(--muted); font-size: 13px; }
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 18px 20px; margin: 14px 0;
+}
+.card:hover { box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08); }
+.card-head { display: flex; align-items: flex-start; gap: 14px; }
+.rank {
+  flex: none; width: 30px; height: 30px; border-radius: 50%;
+  background: var(--chip); color: var(--chip-text);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; margin-top: 2px;
+}
+.body { flex: 1; min-width: 0; }
+.badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+.badge { border-radius: 6px; padding: 1px 9px; font-size: 12px; font-weight: 600; }
+.badge.score { background: var(--chip); color: var(--chip-text); }
+.tier-high { background: var(--high-bg); color: var(--high-text); }
+.tier-medium { background: var(--mid-bg); color: var(--mid-text); }
+.tier-low { background: var(--low-bg); color: var(--low-text); }
+.badge.llm { background: var(--tldr-bg); color: var(--accent); }
+.title { font-size: 16.5px; font-weight: 700; line-height: 1.4; margin: 2px 0 4px; }
+.title a { color: var(--text); text-decoration: none; }
+.title a:hover { color: var(--accent); }
+.authors { color: var(--muted); font-size: 13.5px; }
+.tldr {
+  background: var(--tldr-bg); border-left: 3px solid var(--tldr-border);
+  padding: 10px 14px; border-radius: 0 10px 10px 0; margin: 12px 0 4px; font-size: 14.5px;
+}
+.tldr .label { color: var(--accent); font-weight: 700; }
+.tldr .reason { display: block; color: var(--muted); font-size: 13px; margin-top: 3px; }
+.keywords { margin-top: 10px; }
+.kw {
+  display: inline-block; background: var(--chip); color: var(--chip-text);
+  border-radius: 6px; padding: 1px 8px; font-size: 12px; margin: 2px 4px 2px 0;
+}
+.meta { color: var(--muted); font-size: 13px; margin-top: 8px; }
+.meta a { color: var(--accent); text-decoration: none; font-weight: 600; }
+details { margin-top: 10px; }
+summary { cursor: pointer; color: var(--muted); font-size: 13px; user-select: none; }
+.abstract { font-size: 14px; padding: 8px 2px 0; opacity: 0.92; }
+.empty {
+  background: var(--card); border: 1px dashed var(--border); border-radius: 14px;
+  padding: 40px 24px; text-align: center; color: var(--muted); margin-top: 20px;
+}
+footer { margin-top: 40px; color: var(--muted); font-size: 12.5px; text-align: center; }
+footer code { font-size: 11.5px; word-break: break-all; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>📡 LLM &amp; RL Radar</h1>
+    <div class="date">2026-11-18 · window: last 3 days</div>
+    <div class="chips">
+      <span class="chip">🆕 3 new</span>
+      <span class="chip">🔍 8 matched</span>
+      <span class="chip">📥 200 fetched</span>
+    </div>
+    <div class="mode">🔎 keyword mode (transparent scoring, no API key)</div>
+  </header>
+
+  
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">1</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 100</span>
+          <span class="badge tier-high">🔥 high</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.23219v1">Do LLM Agents Still Need to Be Told How to Self-Improve?</a></div>
+        <div class="authors">Shobhita Sundaram, Cansu Sancaktar, Phillip Isola</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.LG · published 2026-11-17 ·
+          <a href="http://arxiv.org/abs/2611.23219v1">abs</a> · <a href="https://arxiv.org/pdf/2611.23219v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">LLM agents increasingly drive their own learning. Self-improvement methods delegate various components of model optimization to the models themselves. As models become more capable, this motivates a basic question: do these increasingly capable models still need us to specify how they should self-improve? In this paper we study an autonomous paradigm in which, given basic primitives, resources, and a general goal for self-improvement, agents construct their own self-learning algorithm for context-based optimization. Using the setting of gameplay as a testbed, a frozen LLM agent is given a compute budget and tools for collecting experience and updating text documents, and allowed to freely experiment without an externally imposed loop or access to real-world data. We find that sufficiently capable models do self-improve under these conditions, demonstrating strategies that align with classic cognitive frameworks for self-regulated learning and constructs from machine learning literature on self-generated curricula. Furthermore, we study the extent to which the learned text artifacts transfer to external benchmarks, observing improvement across different game horizons, mechanics, and 3D navigation.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">2</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 75</span>
+          <span class="badge tier-high">🔥 high</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.22511v1">LMLineage: Content Lineage and Context Governance for LLM Agents</a></div>
+        <div class="authors">Wei Hou, Jingxin Geng, Xin Chen, Zheqing Jiang</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.AI · published 2026-11-17 ·
+          <a href="http://arxiv.org/abs/2611.22511v1">abs</a> · <a href="https://arxiv.org/pdf/2611.22511v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Interpretability for AI agents should not be confined to understanding the model&#39;s internal weights. It must also cover the agent&#39;s reasoning and decision-making process over multi-source context. We present LMLineage, an out-of-band system that attributes every output sentence of an agent session to its supporting input spans with calibrated confidences, without requiring white-box access to the model or any additional inference passes. On top of the lineage metadata, we build concept-drift micro compaction: instead of waiting for the context-length limit and summarizing everything, the system detects when previously used input documents have stopped being referenced (&#34;drifted&#34;) and surgically compacts only those, preserving user instructions verbatim. We evaluate on a multi-tier corpus: 71 gold annotated sentences from 10 Chinese web-QA cases, plus 90 turns of independently collected multi-turn sessions across three generator models (gpt-4o-mini, qwen3.8-27b, deepseek-v4-flash). Results show that (i) window-level embedding similarity is far better aligned with LLM paraphrasing than whole document or lexical matching; (ii) the greedy-window fast path is both faster and more accurate on average than exhaustive line-matching (a multiple-comparisons bias in the latter inflates web recall at the cost of overall accuracy); (iii) per-turn attribution completes in 1s on a single GPU, remaining stable as context accumulates to 40 turns; and (iv) concept-drift detection is conservative (0% false compaction) with recall bounded by attribution accuracy. We further describe the concept-drift micro compaction design and an interactive incident-tracing/memory-cleaning case study. A companion patent application covers the lineage construction method.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">3</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 25</span>
+          <span class="badge tier-low">○ low</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.22539v1">JET: Just-Enough Exploration Tuning for Efficient Tool-Calling Agents in Repository-Level Question Answering</a></div>
+        <div class="authors">Yoonho Choi, Taehyeon Han, Seonghyeon Lee</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.CL · published 2026-11-17 ·
+          <a href="http://arxiv.org/abs/2611.22539v1">abs</a> · <a href="https://arxiv.org/pdf/2611.22539v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">In repository-level question answering (QA), an agent explores a code repository with tools and should answer a question once enough information is gathered. Nevertheless, we find that LLM agents often continue to invoke tools even after the gathered information is already sufficient to answer. We call this phenomenon over-exploration. Moreover, even though existing methods improve task performance through supervised fine-tuning (SFT) on expert trajectories, SFT also propagates the over-exploration in the trajectories to the agent. To mitigate over-exploration, we propose Just-Enough Exploration Tuning (JET), a fine-tuning method that trains the agent to answer once the gathered information is sufficient. JET truncates each training trajectory at the step where the gathered information becomes sufficient, inserts a rationale that explains why the agent can answer at that step, and fine-tunes the agent with a higher loss weight on the rationale. Experiments on two repository-level QA benchmarks with two open-weight 8B models demonstrate that JET reduces tool calls by 11 to 33% on self-generated trajectories while largely preserving the score. On expert trajectories, JET makes 18 to 28% fewer tool calls than SFT while retaining most of the score gain of SFT. In both cases, JET also lowers the inference cost.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  
+
+  <footer>
+    Generated by <b>arxiv-radar</b> · 2026-11-18<br>
+    <code>query: (cat:cs.CL OR cat:cs.LG) AND (all:&#34;large language model&#34; OR all:&#34;LLM agents&#34; OR all:&#34;reinforcement learning&#34;)</code>
+  </footer>
+</div>
+</body>
+</html>
