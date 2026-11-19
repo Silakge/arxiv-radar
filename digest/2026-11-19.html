@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLM &amp; RL Radar · 2026-11-19</title>
+<style>
+:root {
+  --bg: #f6f7f9; --card: #ffffff; --text: #1a1d21; --muted: #6b7280;
+  --accent: #2563eb; --border: #e5e7eb; --chip: #eef2ff; --chip-text: #3730a3;
+  --high-bg: #ecfdf5; --high-text: #047857; --mid-bg: #fffbeb; --mid-text: #b45309;
+  --low-bg: #f3f4f6; --low-text: #6b7280;
+  --tldr-bg: #f0f9ff; --tldr-border: #38bdf8;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1115; --card: #171a21; --text: #e6e8eb; --muted: #8b91a0;
+    --accent: #60a5fa; --border: #262b36; --chip: #1e2433; --chip-text: #a5b4fc;
+    --high-bg: #10241c; --high-text: #34d399; --mid-bg: #26200e; --mid-text: #fbbf24;
+    --low-bg: #1a1d24; --low-text: #8b91a0;
+    --tldr-bg: #12233a; --tldr-border: #38bdf8;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+.wrap { max-width: 860px; margin: 0 auto; padding: 36px 20px 60px; }
+header h1 { font-size: 27px; margin: 0 0 4px; letter-spacing: -0.02em; }
+header .date { color: var(--muted); margin-bottom: 14px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 6px; }
+.chip {
+  background: var(--chip); color: var(--chip-text); border-radius: 999px;
+  padding: 3px 12px; font-size: 12.5px; font-weight: 600;
+}
+.mode { color: var(--muted); font-size: 13px; }
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 18px 20px; margin: 14px 0;
+}
+.card:hover { box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08); }
+.card-head { display: flex; align-items: flex-start; gap: 14px; }
+.rank {
+  flex: none; width: 30px; height: 30px; border-radius: 50%;
+  background: var(--chip); color: var(--chip-text);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; margin-top: 2px;
+}
+.body { flex: 1; min-width: 0; }
+.badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+.badge { border-radius: 6px; padding: 1px 9px; font-size: 12px; font-weight: 600; }
+.badge.score { background: var(--chip); color: var(--chip-text); }
+.tier-high { background: var(--high-bg); color: var(--high-text); }
+.tier-medium { background: var(--mid-bg); color: var(--mid-text); }
+.tier-low { background: var(--low-bg); color: var(--low-text); }
+.badge.llm { background: var(--tldr-bg); color: var(--accent); }
+.title { font-size: 16.5px; font-weight: 700; line-height: 1.4; margin: 2px 0 4px; }
+.title a { color: var(--text); text-decoration: none; }
+.title a:hover { color: var(--accent); }
+.authors { color: var(--muted); font-size: 13.5px; }
+.tldr {
+  background: var(--tldr-bg); border-left: 3px solid var(--tldr-border);
+  padding: 10px 14px; border-radius: 0 10px 10px 0; margin: 12px 0 4px; font-size: 14.5px;
+}
+.tldr .label { color: var(--accent); font-weight: 700; }
+.tldr .reason { display: block; color: var(--muted); font-size: 13px; margin-top: 3px; }
+.keywords { margin-top: 10px; }
+.kw {
+  display: inline-block; background: var(--chip); color: var(--chip-text);
+  border-radius: 6px; padding: 1px 8px; font-size: 12px; margin: 2px 4px 2px 0;
+}
+.meta { color: var(--muted); font-size: 13px; margin-top: 8px; }
+.meta a { color: var(--accent); text-decoration: none; font-weight: 600; }
+details { margin-top: 10px; }
+summary { cursor: pointer; color: var(--muted); font-size: 13px; user-select: none; }
+.abstract { font-size: 14px; padding: 8px 2px 0; opacity: 0.92; }
+.empty {
+  background: var(--card); border: 1px dashed var(--border); border-radius: 14px;
+  padding: 40px 24px; text-align: center; color: var(--muted); margin-top: 20px;
+}
+footer { margin-top: 40px; color: var(--muted); font-size: 12.5px; text-align: center; }
+footer code { font-size: 11.5px; word-break: break-all; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>📡 LLM &amp; RL Radar</h1>
+    <div class="date">2026-11-19 · window: last 3 days</div>
+    <div class="chips">
+      <span class="chip">🆕 4 new</span>
+      <span class="chip">🔍 7 matched</span>
+      <span class="chip">📥 200 fetched</span>
+    </div>
+    <div class="mode">🔎 keyword mode (transparent scoring, no API key)</div>
+  </header>
+
+  
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">1</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 100</span>
+          <span class="badge tier-high">🔥 high</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.24313v1">AutoPI: Taxonomy-Guided Adaptive Red Teaming for Prompt Injection in LLM Agents</a></div>
+        <div class="authors">Stavros Damianakis, Konstantinos Psounis</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.CR · published 2026-11-18 ·
+          <a href="http://arxiv.org/abs/2611.24313v1">abs</a> · <a href="https://arxiv.org/pdf/2611.24313v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Prompt injection is the dominant unsolved security risk for LLM agents, and the community now agrees that robustness must be measured against adaptive attackers rather than fixed benchmark injections. Many adaptive red teamers exist, and most are built to maximize attack success rate (ASR). Yet ASR counts how often a target breaks, not in how many different ways. A red teamer can achieve a high ASR by reusing a few techniques that work, leaving the others untested and absent from the attacks used to harden models. We present AutoPI, an adaptive red teamer designed to find many different ways to break a target, not just to break it often. AutoPI uses PIAtlas, a taxonomy of prompt-injection techniques, both to guide its search and to measure coverage. For each scenario, an attacker LLM writes an injection for every sub-technique in the taxonomy and then reworks the ones that fail using feedback from an LLM judge. The method is black-box and training-free, it plugs into existing benchmarks in place of their fixed attack templates, and it stays up to date as the taxonomy evolves. We evaluate AutoPI on AgentDojo and IPI Arena against open-weight and proprietary target models. Alongside ASR, we report technique coverage, the fraction of taxonomy classes, techniques, and sub-techniques that yield at least one successful injection. On AgentDojo, AutoPI finds a successful injection against Qwen3.6-35B in all six classes of the taxonomy and for more than 90% of its techniques. Against Claude Haiku 5.5, the most robust target we evaluate, it achieves between 20% and 50% higher ASR and between 25% and 400% higher class-level coverage than recent state-of-the-art adaptive red teamers, while requiring no training. We release our code and the generated attacks to support reproducible, coverage-aware evaluation.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">2</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 25</span>
+          <span class="badge tier-low">○ low</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.23751v1">Thinking Fast, Anywhere: One System-1 for the Decision Points of Any Agent Workflow</a></div>
+        <div class="authors">Rui Li, Liyang He, Zheng Zhang, et al.</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.AI · published 2026-11-18 ·
+          <a href="http://arxiv.org/abs/2611.23751v1">abs</a> · <a href="https://arxiv.org/pdf/2611.23751v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Autonomous LLM agents incur substantial cost and latency by invoking a large model (System-2) at every step, even when many intermediate actions choose among a small set of known candidates. Existing dual-system agents offload such decisions to a lightweight System-1 model, but rely on workflow-specific hooks authored per environment. We present AnyS1, a framework that turns human-authored procedural skills, whose instructions naturally specify where choices arise and which options apply, into a shared, domain-general source of decision points. Offline, AnyS1 mines grounded enumerable decisions across over 1,000 public skills, gathers execution-grounded trajectory states inside isolated containers to construct Any-DP, and trains a single calibrated 4B pointer System-1 with label smoothing. At run time, compiled workflows resolve routine decisions in one forward pass and fall back to System-2 when confidence falls below a calibrated threshold. Across three unseen benchmarks and distinct System-2 model families, AnyS1 preserves task reliability while cutting episode cost by 75-91% and model-call time by 63-92% relative to an uncompiled System-2 agent, and maintains performance under zero-shot threshold transfer.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">3</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 25</span>
+          <span class="badge tier-low">○ low</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.23403v1">Tracking Representations in LLM Reasoning Traces for Iterated Games</a></div>
+        <div class="authors">Chaipat Tirapongprasert, Rajarshi Das, Parijat Dube</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.CL · published 2026-11-17 ·
+          <a href="http://arxiv.org/abs/2611.23403v1">abs</a> · <a href="https://arxiv.org/pdf/2611.23403v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Large language model (LLM) agents achieve state-of-the-art performance across domains through chain-of-thought (CoT) reasoning. Despite their ubiquitous use, little is understood about the relationship between the externalized trace and the model&#39;s actual computation. We address this by investigating how LLM agents make decisions in iterative games with incomplete information. Using a series of mechanistic interpretability techniques, we find that the model forms and iteratively revises an internal representation of the game throughout the CoT. Once the model prematurely commits to an incorrect belief, it rarely recovers. This failure is manifested in both the literal trace and the layer activations. Ultimately, as multi-agent systems are more prevalent, our work opens the door to a more focused diagnosis of their strategic reasoning errors. For illustrative purposes, we offer an interactive visualizer of our methodology on selected sample traces at https://interp-self.github.io/gametrace/</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">4</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 17</span>
+          <span class="badge tier-low">○ low</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.24059v1">Replay, Don&#39;t Resample: Off-Policy Consolidation of Long-Horizon RL Experts</a></div>
+        <div class="authors">Zhenrui Yue, Gongxiaohui Chen, Huimin Zeng, et al.</div>
+        
+        <div class="keywords"><span class="kw">reward model</span></div>
+        <div class="meta">
+          cs.LG · published 2026-11-18 ·
+          <a href="http://arxiv.org/abs/2611.24059v1">abs</a> · <a href="https://arxiv.org/pdf/2611.24059v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Frontier post-training follows a common recipe: train one expert per domain with reinforcement learning (RL), then consolidate the experts into one model via multi-teacher on-policy distillation (MOPD). Such consolidation is expensive: the student samples in every environment again, an expert scores every sampled token, and the student inherits the drift of the final experts. Yet we argue that the experts&#39; RL runs have already produced what consolidation needs: rollouts with their sampling probabilities and rewards, in the order the experts learned from them. We propose multi-expert replay policy distillation (MRPD), which replays these training logs through the student in the experts&#39; order. At each step, the policy gradient is recomputed on these scored trajectories, and the final experts&#39; distributions are distilled at the logged prefixes. Following the experts&#39; own trajectory reduces the training-inference mismatch and keeps the student within the clip range, so the replay is off-policy in origin but quasi-on-policy throughout consolidation. MRPD samples nothing and calls no environment or reward model: the trainer is the sole process, and consolidating the experts costs only about a seventh of the compute used to train them. On three long-horizon agentic domains (reasoning, search and SQL), MRPD yields the best student model, substantially outperforming online RL baselines, and surpassing MOPD from the same experts at a fraction of MOPD&#39;s cost. Our analysis on the same logs shows that the replayed trajectories carry most of the gain, and that both the policy gradient and the distillation term add to it. Most interestingly, the order of the logs matters more than their amount or rewards, suggesting that expert training logs are a curriculum, not a data mixture.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  
+
+  <footer>
+    Generated by <b>arxiv-radar</b> · 2026-11-19<br>
+    <code>query: (cat:cs.CL OR cat:cs.LG) AND (all:&#34;large language model&#34; OR all:&#34;LLM agents&#34; OR all:&#34;reinforcement learning&#34;)</code>
+  </footer>
+</div>
+</body>
+</html>
