@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLM &amp; RL Radar · 2026-11-20</title>
+<style>
+:root {
+  --bg: #f6f7f9; --card: #ffffff; --text: #1a1d21; --muted: #6b7280;
+  --accent: #2563eb; --border: #e5e7eb; --chip: #eef2ff; --chip-text: #3730a3;
+  --high-bg: #ecfdf5; --high-text: #047857; --mid-bg: #fffbeb; --mid-text: #b45309;
+  --low-bg: #f3f4f6; --low-text: #6b7280;
+  --tldr-bg: #f0f9ff; --tldr-border: #38bdf8;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1115; --card: #171a21; --text: #e6e8eb; --muted: #8b91a0;
+    --accent: #60a5fa; --border: #262b36; --chip: #1e2433; --chip-text: #a5b4fc;
+    --high-bg: #10241c; --high-text: #34d399; --mid-bg: #26200e; --mid-text: #fbbf24;
+    --low-bg: #1a1d24; --low-text: #8b91a0;
+    --tldr-bg: #12233a; --tldr-border: #38bdf8;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+.wrap { max-width: 860px; margin: 0 auto; padding: 36px 20px 60px; }
+header h1 { font-size: 27px; margin: 0 0 4px; letter-spacing: -0.02em; }
+header .date { color: var(--muted); margin-bottom: 14px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 6px; }
+.chip {
+  background: var(--chip); color: var(--chip-text); border-radius: 999px;
+  padding: 3px 12px; font-size: 12.5px; font-weight: 600;
+}
+.mode { color: var(--muted); font-size: 13px; }
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 18px 20px; margin: 14px 0;
+}
+.card:hover { box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08); }
+.card-head { display: flex; align-items: flex-start; gap: 14px; }
+.rank {
+  flex: none; width: 30px; height: 30px; border-radius: 50%;
+  background: var(--chip); color: var(--chip-text);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; margin-top: 2px;
+}
+.body { flex: 1; min-width: 0; }
+.badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+.badge { border-radius: 6px; padding: 1px 9px; font-size: 12px; font-weight: 600; }
+.badge.score { background: var(--chip); color: var(--chip-text); }
+.tier-high { background: var(--high-bg); color: var(--high-text); }
+.tier-medium { background: var(--mid-bg); color: var(--mid-text); }
+.tier-low { background: var(--low-bg); color: var(--low-text); }
+.badge.llm { background: var(--tldr-bg); color: var(--accent); }
+.title { font-size: 16.5px; font-weight: 700; line-height: 1.4; margin: 2px 0 4px; }
+.title a { color: var(--text); text-decoration: none; }
+.title a:hover { color: var(--accent); }
+.authors { color: var(--muted); font-size: 13.5px; }
+.tldr {
+  background: var(--tldr-bg); border-left: 3px solid var(--tldr-border);
+  padding: 10px 14px; border-radius: 0 10px 10px 0; margin: 12px 0 4px; font-size: 14.5px;
+}
+.tldr .label { color: var(--accent); font-weight: 700; }
+.tldr .reason { display: block; color: var(--muted); font-size: 13px; margin-top: 3px; }
+.keywords { margin-top: 10px; }
+.kw {
+  display: inline-block; background: var(--chip); color: var(--chip-text);
+  border-radius: 6px; padding: 1px 8px; font-size: 12px; margin: 2px 4px 2px 0;
+}
+.meta { color: var(--muted); font-size: 13px; margin-top: 8px; }
+.meta a { color: var(--accent); text-decoration: none; font-weight: 600; }
+details { margin-top: 10px; }
+summary { cursor: pointer; color: var(--muted); font-size: 13px; user-select: none; }
+.abstract { font-size: 14px; padding: 8px 2px 0; opacity: 0.92; }
+.empty {
+  background: var(--card); border: 1px dashed var(--border); border-radius: 14px;
+  padding: 40px 24px; text-align: center; color: var(--muted); margin-top: 20px;
+}
+footer { margin-top: 40px; color: var(--muted); font-size: 12.5px; text-align: center; }
+footer code { font-size: 11.5px; word-break: break-all; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>📡 LLM &amp; RL Radar</h1>
+    <div class="date">2026-11-20 · window: last 3 days</div>
+    <div class="chips">
+      <span class="chip">🆕 7 new</span>
+      <span class="chip">🔍 12 matched</span>
+      <span class="chip">📥 200 fetched</span>
+    </div>
+    <div class="mode">🔎 keyword mode (transparent scoring, no API key)</div>
+  </header>
+
+  
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">1</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 100</span>
+          <span class="badge tier-high">🔥 high</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.25582v1">AutoRAGBench: A Benchmark for LLM Agents Automating RAG System Development</a></div>
+        <div class="authors">Hang Zhang, Yuzhi Pan, Ziyao Zhong, et al.</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.CL · published 2026-11-19 ·
+          <a href="http://arxiv.org/abs/2611.25582v1">abs</a> · <a href="https://arxiv.org/pdf/2611.25582v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Retrieval-augmented generation (RAG) is a well-established paradigm for augmenting large language models (LLMs) with information retrieved from external corpora. However, developing effective RAG systems requires substantial engineering effort and iterative experimentation, as effective design choices vary across tasks and domains. With rapid advances in LLM agent capabilities, we ask how well these agents can autonomously build RAG systems and how effectively they can improve them through iteration. In this paper, we propose AutoRAGBench, the first benchmark to evaluate how well LLM agents develop RAG systems from scratch in an open code space. It comprises nine RAG system development tasks. For each task, agents build RAG systems from scratch without starter code or prescribed strategies, under a six-hour budget on a single H800 GPU. They analyze task data, implement RAG pipelines, and iteratively refine their designs based on experimental feedback. We evaluate nine agent configurations and analyze both the effectiveness of the resulting RAG systems and their development trajectories. GPT-6.1 Sol with Codex CLI achieves the highest average score of 56.1. The composite Human-SOTA baseline averages 44.4. These results show that LLM agents can automate effective RAG system development. When starting from a human-designed system on each of seven tasks, GPT-6.1 Sol with Codex CLI improves the score by 16.6 points on average.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">2</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 80</span>
+          <span class="badge tier-high">🔥 high</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.25123v1">Forget Freely, Grep Later: Lossless, Index-Free Memory for Long-Horizon LLM Agents</a></div>
+        <div class="authors">Ziyan Yang, Taiwei Shi, Jieyu Zhao</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.CL · published 2026-11-18 ·
+          <a href="http://arxiv.org/abs/2611.25123v1">abs</a> · <a href="https://arxiv.org/pdf/2611.25123v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Long-horizon LLM agents often exceed their context windows, forcing them to discard information that may be needed later. Existing context management strategies rely on summarization, masking, or structured memory, requiring decisions about what to preserve or how to retrieve it before future needs are known. However, these methods can introduce lossy compression, potentially discarding details needed for future tasks. To address this limitation, we introduce GrepMem, a simple, lossless, and index-free memory mechanism built on two components: an append-only plain-text log of the agent&#39;s complete history and a regular-expression search tool for on-demand recall. Unlike structured memory systems, GrepMem requires no embeddings, retrieval index, memory extraction, or additional models. We train Qwen3.5-9B with reinforcement learning under five context management strategies and evaluate on multi-question research sessions, long-stream recall, and agent-trajectory question answering. GrepMem achieves 95-97% accuracy on ContextBench, versus at most 21% for lossy baselines, and outperforms SUPO&#39;s summarization by 8.8 percentage points on BCP-Multi. GrepMem scales effectively to increasingly long input streams while remaining on the accuracy-token-cost Pareto frontier across all five evaluation tasks. Our results show that a plain-text log and grep provide a simple but competitive approach to long-horizon agent memory, without requiring complex structured memory infrastructure.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">3</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 60</span>
+          <span class="badge tier-medium">● medium</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.25252v1">Moving Generality from Model to Modeler: LLM Agents for PHM on a Deployment-Style Benchmark</a></div>
+        <div class="authors">Zhenling Chen, Zhiguo Zeng, Anne Barros</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.LG · published 2026-11-18 ·
+          <a href="http://arxiv.org/abs/2611.25252v1">abs</a> · <a href="https://arxiv.org/pdf/2611.25252v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Coding agents built on large language models (LLMs) now help develop many models published as general solutions. Should generality instead reside in the agent that builds a model for each new task? We examine this question in prognostics and health management (PHM), where every model must work on unseen equipment. Our deployment-style benchmark, NextUnit-Bench, covers 24 public datasets split into 58 folds that hold out units or operating conditions; each agent has two hours to deliver an executable predictor, then run on the hidden units. First, frontier agents outperform AutoML, which reaches less than half the best agent&#39;s score, and faithful implementations of published methods on four datasets, of which only 6 of 30 beat the strongest agent&#39;s own design; published accuracies, where reproducible, rest on the papers&#39; own conventions, and a single convention, capping the remaining life of test engines, can halve the reported error. Second, the agents&#39; advantage is a design made on each machine&#39;s data; once made, a plain-text plan of a few hundred words carries most of the gap between two frontier agents, and given a weaker agent&#39;s plan, the strongest agent falls to that agent&#39;s level, often to identical predictions. Before touching the data, however, it matters little whose plan an agent carries out, and domain toolkits appear to help neither: what sets the strongest apart is how much it learns from the data. Third, such designs reach only implementers that can execute them: given the strongest agent&#39;s designs, a locally deployable open-weight model delivers half as often, even when they are lightened, and scores no higher than without them. Generality, we argue, is not disappearing but moving, from the model to the modeler.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">4</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 27</span>
+          <span class="badge tier-low">○ low</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.25898v1">Verifiable Logic in Medical LLMs: A Critical Review of Agentic Clinical Reasoning Optimization and Neuro-Symbolic Grounding</a></div>
+        <div class="authors">Youssef ElNahas, Adel Ammar, Soumaya Chaffar, Wadii Boulila</div>
+        
+        <div class="keywords"><span class="kw">reward model</span></div>
+        <div class="meta">
+          cs.CL · published 2026-11-19 ·
+          <a href="http://arxiv.org/abs/2611.25898v1">abs</a> · <a href="https://arxiv.org/pdf/2611.25898v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Clinical large language models are usually judged by whether the final answer is right. Yet a model can reach a fluent, plausible output through invalid reasoning that static benchmarks do not detect, and confident hallucination, causally invalid inference, and spurious demographic shortcuts can pass conventional evaluation. This critical review covers four paradigms in turn: how clinical hallucination arises and why static metrics miss it; the agentic hallucination cascade, in which multi-agent and tool-augmented systems propagate and amplify early reasoning errors; process reward modeling as step-level supervision; and neuro-symbolic grounding, in which formal logic engines, ontology reasoners, and knowledge graphs place verifiable constraints on neural output. Within their encoded domains, systems with symbolic veto layers offer guarantees that hold relative to their encoded knowledge, and they report large gains on the safety measures they use. These results come from single studies, mostly in simulated or small-sample settings, and are not directly comparable with neural baselines. Process reward models remain bounded by the statistics of their training data. We propose a conceptual framework that maps each agentic failure mode to a symbolic intervention point, and we argue that clinical AI safety depends substantially on system architecture. Because current regulation emphasizes performance and does not require verification of reasoning steps, we argue that responsible certification should also audit reasoning trajectories alongside accuracy on static benchmarks.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">5</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 27</span>
+          <span class="badge tier-low">○ low</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.25135v1">Calibrated Decision Rewards: Training Language Models with a Judge That Knows How Sure It Is</a></div>
+        <div class="authors">Rudransh Agnihotri, Manasvi Kapoor</div>
+        
+        <div class="keywords"><span class="kw">reward model</span></div>
+        <div class="meta">
+          cs.AI · published 2026-11-18 ·
+          <a href="http://arxiv.org/abs/2611.25135v1">abs</a> · <a href="https://arxiv.org/pdf/2611.25135v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Reinforcement learning (RL) can only teach a language model what its reward can recognize. Answer checkers are exact but need a reference answer; learned reward models and LLM judges work everywhere, but their scores are not probabilities. We study RLCDR (Reinforcement Learning from Calibrated Decision Rewards). An LLM converted into a decision model answers a typed question about a response (&#34;is the final answer correct?&#34;, &#34;which step is the first error?&#34;) with a probability distribution, read in one forward pass, debiased over option orders and calibrated with about a hundred labels. Training Qwen3-1.7B with GRPO on MATH, this reference-free reward raises MATH500 accuracy from 72.2% to 76.8% (+4.65 points, p &lt; 1e-4), matching training on the answer key (76.9%), while a random reward gains only +0.65. The gain grows with difficulty, from 44.8% to 51.7% on the hardest level. On the policy&#39;s own changing samples the reward stays calibrated: its expected calibration error is half that of a softmax judge on the same 27B backbone (0.074 vs. 0.141), and it shows no sign of reward hacking. Without step training, the same model finds the first wrong step better than a dedicated 7B process reward model (ProcessBench F1 0.772 vs. 0.722, 20/20 splits). We also map where the approach stops being enough: trained only on problems the base model mostly fails, the reference-free reward still improves the policy (+1.9 MATH500 points, p = 0.03) but trails the answer key, because its probabilities become overconfident on that distribution. We state six hypotheses in advance and test each with a control designed to falsify it.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">6</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 20</span>
+          <span class="badge tier-low">○ low</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.26531v1">Cost-Aware Agentic Feature Optimization System for Fleet-Scale Ranking Models</a></div>
+        <div class="authors">Chang Yang, Yao Xuan, Wendan Yan, et al.</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.IR · published 2026-11-19 ·
+          <a href="http://arxiv.org/abs/2611.26531v1">abs</a> · <a href="https://arxiv.org/pdf/2611.26531v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Large Web platforms operate large fleets of ranking models, each selecting features from a shared pool of tens of thousands. We present an end-to-end agentic system that optimizes features across the fleet under resource constraints shared across models and those set per model, such as feature pipeline cost and serving throughput (QPS), respectively. In this system, LLM agents propose hypotheses, and deterministic tools execute experiments and verify them. For each model, an LLM generates and shortlists cross features from a combinatorial candidate space, and all features are then ranked by several importance methods. Feature blending mixes these rankings into a single selection, using Pareto fronts across tasks for multi-task models. An LLM Researcher agent then tunes the feature selection in 10--25 asynchronous trials under resource caps, and a trimming step keeps the pipeline cost within budget. Across production models, the system improves normalized entropy by 0.31% on average within each model&#39;s budget, and the trimming step cuts pipeline cost by 2.3% with no regression beyond measurement noise. The optimized models were launched, and in online A/B tests they improved a primary online metric by 0.20%.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">7</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 13</span>
+          <span class="badge tier-low">○ low</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.25446v1">PAIR-MED: Policy-reward Alternation for Iterative Refinement in Multilingual Medical Reasoning</a></div>
+        <div class="authors">Fan Gao, Xiaohang Xu, Lang Huang, et al.</div>
+        
+        <div class="keywords"><span class="kw">reward model</span></div>
+        <div class="meta">
+          cs.CL · published 2026-11-19 ·
+          <a href="http://arxiv.org/abs/2611.25446v1">abs</a> · <a href="https://arxiv.org/pdf/2611.25446v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Large language models demonstrate strong medical question-answering capabilities, yet reasoning performance remains uneven across languages. Process reward models (PRMs) provide step-level feedback for improving reasoning, but a fixed PRM may become increasingly misaligned with the trajectory distribution of an evolving policy during reinforcement learning, thereby reducing the reliability of its supervision. We propose a policy--reward alternating training framework that jointly adapts a medical PRM and optimizes a multilingual reasoning policy. Following supervised initialization, the current policy generates multilingual trajectories to update the PRM, which then provides process-level rewards for the next policy update. Medical step supervision maintains the PRM&#39;s medical foundation, while process, outcome, and language-related rewards guide policy learning. We develop multilingual medical PRMs (PAIR-PRM) and reasoning models (PAIR-MED) at 8B and 9B scales across 12 languages. On the medical subsets of Global-MMLU and MMLU-ProX, our models improve average accuracy by 3.01--7.47% over their corresponding Qwen backbones. On CUREMED-BENCH, PAIR-MED-9B improves the joint language consistency and logical accuracy metric by 12.88% and 7.45% over baselines for in-domain and out-of-domain languages. Further analyses examine PRM adaptation, multilingual reasoning quality, and the contributions of individual training components.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  
+
+  <footer>
+    Generated by <b>arxiv-radar</b> · 2026-11-20<br>
+    <code>query: (cat:cs.CL OR cat:cs.LG) AND (all:&#34;large language model&#34; OR all:&#34;LLM agents&#34; OR all:&#34;reinforcement learning&#34;)</code>
+  </footer>
+</div>
+</body>
+</html>
