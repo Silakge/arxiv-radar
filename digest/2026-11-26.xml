@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>LLM &amp; RL Radar</title>
+    <link>https://arxiv.org</link>
+    <description>arxiv-radar digest for 2026-11-26 (window: 3 days)</description>
+    <lastBuildDate>Thu, 26 Nov 2026 00:00:00 +0000</lastBuildDate>
+  <item>
+    <title>What Must LLM Agents Communicate? From Information Loss to Communication Failures</title>
+    <link>http://arxiv.org/abs/2611.33318v1</link>
+    <guid isPermaLink="true">http://arxiv.org/abs/2611.33318v1</guid>
+    <pubDate>Tue, 24 Nov 2026 19:07:21 +0000</pubDate>
+    <description>&lt;p&gt;When evidence is distributed across LLM agents, a team may collectively possess all the information needed for a decision yet fail to use it effectively. What must agents communicate for accurate joint predictions, and when does interaction help? We study three requirements for effective communication: sufficiency of the information conveyed, selection of relevant evidence, and utilization of received information. Drawing on information theory and communication complexity, we develop a framework that combines theoretical benchmarks with controlled experiments and message-level analyses. We find that local probability reports can discard essential information, with theoretical information loss closely matching observed performance penalties. Query-first interaction improves predictions when relevant evidence depends on a private query, but compact one-shot representations can eliminate this advantage. Even when sufficient information is communicated, agents may fail to select or use it correctly. Together, these findings distinguish fundamental communication limits from failures in how LLM agents communicate and use information.&lt;/p&gt;</description>
+  </item>
+  <item>
+    <title>Agent-as-a-Verifier: From Scores to Evidence for General Verification</title>
+    <link>http://arxiv.org/abs/2611.34132v1</link>
+    <guid isPermaLink="true">http://arxiv.org/abs/2611.34132v1</guid>
+    <pubDate>Wed, 25 Nov 2026 10:31:08 +0000</pubDate>
+    <description>&lt;p&gt;Verification is increasingly critical across various inference and learning paradigms, such as test-time scaling, recursive intelligence and automated research, where feedback can improve efficiency and optimization. Common score-based verifiers, or discriminative reward models, predict a scalar reward for an output. While useful for filtering, rewarding, and ranking, such scores provide no explicit, auditable evidentiary basis for the judgment. In parallel, although existing generative process reward models offer text feedback, most designs do not fully exploit agentic capabilities, such as tool use and iterative reasoning, which are essential for fact-checking and fine-grained claim verification. In this paper, we address these limitations by introducing Agent-as-a-Verifier, an agentic, certificate-producing verification system that places role-separated LLM agents inside a formal-methods-inspired claim-obligation-certificate protocol. Given a generation candidate, Agent-as-a-Verifier produces a certificate by extracting a verdict-blind dependency graph of claims, independently compiling the task's acceptance contract, and deriving checkable obligations. On Terminal-Bench 2.1, Agent-as-a-Verifier achieves higher accuracy than the state-of-the-art approach. Across different downstream applications, the augmented agent also outperforms the plain agent on FrontierMath and CyberGym. More importantly, Agent-as-a-Verifier is able to identify reward-hacking solutions that deceive the benchmark evaluator, highlighting its broader potential for iterative and recursive agent optimization. Code is available at https://github.com/sunyxedu/General-Verifier&lt;/p&gt;</description>
+  </item>
+  <item>
+    <title>IRTIQA: Evolving in English, Evaluated in Urdu -- Does Agent Self-Evolution Transfer from English to Urdu and Code-Switched Input?</title>
+    <link>http://arxiv.org/abs/2611.34303v1</link>
+    <guid isPermaLink="true">http://arxiv.org/abs/2611.34303v1</guid>
+    <pubDate>Wed, 25 Nov 2026 12:56:41 +0000</pubDate>
+    <description>&lt;p&gt;As LLM agents increasingly learn from their own experience, the tasks they learn from and are evaluated on are almost always in English. We ask whether self-evolution transfers from English to Urdu, and release IRTIQA, a benchmark of aligned English, Urdu-translated, and Urdu code-switched variants of DROP, SNIPS, AppWorld, and SkillsBench, built with a matrix-language code-switching pipeline and human verification. Using IRTIQA, we evaluate three self-evolving frameworks, Tool-R0 (self-play RL), AgentEvolver (experience-guided RL), and Autogenesis (protocol-level evolution), against their unevolved backbones. Self-evolution often raises capability: AgentEvolver lifts AppWorld goal completion from near zero to 20-36% across all conditions, and Autogenesis improves SkillsBench pass rate from 16.48% to 22.22%. But it rarely closes the language gap. Evolved systems remain stronger in English, by up to 0.26 DROP F1, the gap is largest on multi-step tasks, and code-switching behaves as a distinct condition rather than degraded translation. On a shared Gemma-4 31B backbone, the gap exists before evolution, and RL-based evolution can hurt Urdu reasoning more than English. Language parity must therefore be an explicit design target, as it does not emerge from self-improvement alone.&lt;/p&gt;</description>
+  </item>
+  <item>
+    <title>Unstable Action Boundaries in Lethal Drone Agents</title>
+    <link>http://arxiv.org/abs/2611.34121v1</link>
+    <guid isPermaLink="true">http://arxiv.org/abs/2611.34121v1</guid>
+    <pubDate>Wed, 25 Nov 2026 10:23:38 +0000</pubDate>
+    <description>&lt;p&gt;Tool-using large language model (LLM) agents raise safety risks that are not captured by text-only refusal behavior, especially when tools can trigger high-impact actions. This concern is salient in military settings, where autonomous weapons raise the possibility of delegating force decisions to software agents. In this work, we study whether a drone agent's action boundary is stable under changes to the target descriptor. We evaluate recent and popular LLMs in a simulated perception-action pipeline over real-world drone imagery, where models can localize requested targets and invoke a simulated lethal tool. We find two concerning failure modes. First, some LLM agents invoke the lethal tool for ordinary generic descriptors such as \emph{people}, requiring no jailbreak at all. Second, an agent that initially appears conservative under protected descriptors can become unsafe under a simple semantic target shift.&lt;/p&gt;</description>
+  </item>
+  <item>
+    <title>Few-Shot Adaptation of Vision-Language Models via Agentic Model Editing</title>
+    <link>http://arxiv.org/abs/2611.34036v1</link>
+    <guid isPermaLink="true">http://arxiv.org/abs/2611.34036v1</guid>
+    <pubDate>Wed, 25 Nov 2026 09:18:22 +0000</pubDate>
+    <description>&lt;p&gt;Few-shot adaptation transfers pretrained Vision-Language Models (VLMs) to new domains using a small set of labeled images. Most methods fit prompts, representations, or classifiers within an adaptation procedure specified in advance. Yet the visual distinctions needed for recognition can differ substantially across domains, motivating the question: Can an LLM agent use few-shot examples and model observations to design the adaptation procedure itself? We propose Agentic Model Editing (AME), an agentic framework that jointly designs input transformations, encoder edits, feature computation, and classifier fitting as an executable, domain-customized adaptation program. The agent inspects images, class semantics, model parameters, intermediate representations, and activations to formulate hypotheses about the target task. It implements and tests candidate programs on the support set, with aggregate validation accuracy guiding refinement and selection. Each program fits a complete domain model that is fixed before testing. The agent and its tools are shared across domains, while each domain receives its own adaptation program. Across eleven datasets with CLIP ViT-B/16, AME achieves the highest average accuracies of 81.2% without back-propagation and 81.9% with back-propagation among the compared methods. Further experiments demonstrate applicability across VLM backbones and LLM agents.&lt;/p&gt;</description>
+  </item>
+  </channel>
+</rss>

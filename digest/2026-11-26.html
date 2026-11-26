@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLM &amp; RL Radar · 2026-11-26</title>
+<style>
+:root {
+  --bg: #f6f7f9; --card: #ffffff; --text: #1a1d21; --muted: #6b7280;
+  --accent: #2563eb; --border: #e5e7eb; --chip: #eef2ff; --chip-text: #3730a3;
+  --high-bg: #ecfdf5; --high-text: #047857; --mid-bg: #fffbeb; --mid-text: #b45309;
+  --low-bg: #f3f4f6; --low-text: #6b7280;
+  --tldr-bg: #f0f9ff; --tldr-border: #38bdf8;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1115; --card: #171a21; --text: #e6e8eb; --muted: #8b91a0;
+    --accent: #60a5fa; --border: #262b36; --chip: #1e2433; --chip-text: #a5b4fc;
+    --high-bg: #10241c; --high-text: #34d399; --mid-bg: #26200e; --mid-text: #fbbf24;
+    --low-bg: #1a1d24; --low-text: #8b91a0;
+    --tldr-bg: #12233a; --tldr-border: #38bdf8;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+.wrap { max-width: 860px; margin: 0 auto; padding: 36px 20px 60px; }
+header h1 { font-size: 27px; margin: 0 0 4px; letter-spacing: -0.02em; }
+header .date { color: var(--muted); margin-bottom: 14px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 6px; }
+.chip {
+  background: var(--chip); color: var(--chip-text); border-radius: 999px;
+  padding: 3px 12px; font-size: 12.5px; font-weight: 600;
+}
+.mode { color: var(--muted); font-size: 13px; }
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 18px 20px; margin: 14px 0;
+}
+.card:hover { box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08); }
+.card-head { display: flex; align-items: flex-start; gap: 14px; }
+.rank {
+  flex: none; width: 30px; height: 30px; border-radius: 50%;
+  background: var(--chip); color: var(--chip-text);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; margin-top: 2px;
+}
+.body { flex: 1; min-width: 0; }
+.badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+.badge { border-radius: 6px; padding: 1px 9px; font-size: 12px; font-weight: 600; }
+.badge.score { background: var(--chip); color: var(--chip-text); }
+.tier-high { background: var(--high-bg); color: var(--high-text); }
+.tier-medium { background: var(--mid-bg); color: var(--mid-text); }
+.tier-low { background: var(--low-bg); color: var(--low-text); }
+.badge.llm { background: var(--tldr-bg); color: var(--accent); }
+.title { font-size: 16.5px; font-weight: 700; line-height: 1.4; margin: 2px 0 4px; }
+.title a { color: var(--text); text-decoration: none; }
+.title a:hover { color: var(--accent); }
+.authors { color: var(--muted); font-size: 13.5px; }
+.tldr {
+  background: var(--tldr-bg); border-left: 3px solid var(--tldr-border);
+  padding: 10px 14px; border-radius: 0 10px 10px 0; margin: 12px 0 4px; font-size: 14.5px;
+}
+.tldr .label { color: var(--accent); font-weight: 700; }
+.tldr .reason { display: block; color: var(--muted); font-size: 13px; margin-top: 3px; }
+.keywords { margin-top: 10px; }
+.kw {
+  display: inline-block; background: var(--chip); color: var(--chip-text);
+  border-radius: 6px; padding: 1px 8px; font-size: 12px; margin: 2px 4px 2px 0;
+}
+.meta { color: var(--muted); font-size: 13px; margin-top: 8px; }
+.meta a { color: var(--accent); text-decoration: none; font-weight: 600; }
+details { margin-top: 10px; }
+summary { cursor: pointer; color: var(--muted); font-size: 13px; user-select: none; }
+.abstract { font-size: 14px; padding: 8px 2px 0; opacity: 0.92; }
+.empty {
+  background: var(--card); border: 1px dashed var(--border); border-radius: 14px;
+  padding: 40px 24px; text-align: center; color: var(--muted); margin-top: 20px;
+}
+footer { margin-top: 40px; color: var(--muted); font-size: 12.5px; text-align: center; }
+footer code { font-size: 11.5px; word-break: break-all; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>📡 LLM &amp; RL Radar</h1>
+    <div class="date">2026-11-26 · window: last 3 days</div>
+    <div class="chips">
+      <span class="chip">🆕 5 new</span>
+      <span class="chip">🔍 11 matched</span>
+      <span class="chip">📥 200 fetched</span>
+    </div>
+    <div class="mode">🔎 keyword mode (transparent scoring, no API key)</div>
+  </header>
+
+  
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">1</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 100</span>
+          <span class="badge tier-high">🔥 high</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.33318v1">What Must LLM Agents Communicate? From Information Loss to Communication Failures</a></div>
+        <div class="authors">Yi-Yun Chu, Xiaobin Shen</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.MA · published 2026-11-24 ·
+          <a href="http://arxiv.org/abs/2611.33318v1">abs</a> · <a href="https://arxiv.org/pdf/2611.33318v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">When evidence is distributed across LLM agents, a team may collectively possess all the information needed for a decision yet fail to use it effectively. What must agents communicate for accurate joint predictions, and when does interaction help? We study three requirements for effective communication: sufficiency of the information conveyed, selection of relevant evidence, and utilization of received information. Drawing on information theory and communication complexity, we develop a framework that combines theoretical benchmarks with controlled experiments and message-level analyses. We find that local probability reports can discard essential information, with theoretical information loss closely matching observed performance penalties. Query-first interaction improves predictions when relevant evidence depends on a private query, but compact one-shot representations can eliminate this advantage. Even when sufficient information is communicated, agents may fail to select or use it correctly. Together, these findings distinguish fundamental communication limits from failures in how LLM agents communicate and use information.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">2</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 47</span>
+          <span class="badge tier-medium">● medium</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.34132v1">Agent-as-a-Verifier: From Scores to Evidence for General Verification</a></div>
+        <div class="authors">Yuxuan Sun, Hao, Chen, et al.</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span><span class="kw">reward model</span></div>
+        <div class="meta">
+          cs.LG · published 2026-11-25 ·
+          <a href="http://arxiv.org/abs/2611.34132v1">abs</a> · <a href="https://arxiv.org/pdf/2611.34132v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Verification is increasingly critical across various inference and learning paradigms, such as test-time scaling, recursive intelligence and automated research, where feedback can improve efficiency and optimization. Common score-based verifiers, or discriminative reward models, predict a scalar reward for an output. While useful for filtering, rewarding, and ranking, such scores provide no explicit, auditable evidentiary basis for the judgment. In parallel, although existing generative process reward models offer text feedback, most designs do not fully exploit agentic capabilities, such as tool use and iterative reasoning, which are essential for fact-checking and fine-grained claim verification. In this paper, we address these limitations by introducing Agent-as-a-Verifier, an agentic, certificate-producing verification system that places role-separated LLM agents inside a formal-methods-inspired claim-obligation-certificate protocol. Given a generation candidate, Agent-as-a-Verifier produces a certificate by extracting a verdict-blind dependency graph of claims, independently compiling the task&#39;s acceptance contract, and deriving checkable obligations. On Terminal-Bench 2.1, Agent-as-a-Verifier achieves higher accuracy than the state-of-the-art approach. Across different downstream applications, the augmented agent also outperforms the plain agent on FrontierMath and CyberGym. More importantly, Agent-as-a-Verifier is able to identify reward-hacking solutions that deceive the benchmark evaluator, highlighting its broader potential for iterative and recursive agent optimization. Code is available at https://github.com/sunyxedu/General-Verifier</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">3</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 20</span>
+          <span class="badge tier-low">○ low</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.34303v1">IRTIQA: Evolving in English, Evaluated in Urdu -- Does Agent Self-Evolution Transfer from English to Urdu and Code-Switched Input?</a></div>
+        <div class="authors">Abdullah Hashmat, Danish Javed, Usman Naseem, Agha Ali Raza</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.CL · published 2026-11-25 ·
+          <a href="http://arxiv.org/abs/2611.34303v1">abs</a> · <a href="https://arxiv.org/pdf/2611.34303v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">As LLM agents increasingly learn from their own experience, the tasks they learn from and are evaluated on are almost always in English. We ask whether self-evolution transfers from English to Urdu, and release IRTIQA, a benchmark of aligned English, Urdu-translated, and Urdu code-switched variants of DROP, SNIPS, AppWorld, and SkillsBench, built with a matrix-language code-switching pipeline and human verification. Using IRTIQA, we evaluate three self-evolving frameworks, Tool-R0 (self-play RL), AgentEvolver (experience-guided RL), and Autogenesis (protocol-level evolution), against their unevolved backbones. Self-evolution often raises capability: AgentEvolver lifts AppWorld goal completion from near zero to 20-36% across all conditions, and Autogenesis improves SkillsBench pass rate from 16.48% to 22.22%. But it rarely closes the language gap. Evolved systems remain stronger in English, by up to 0.26 DROP F1, the gap is largest on multi-step tasks, and code-switching behaves as a distinct condition rather than degraded translation. On a shared Gemma-4 31B backbone, the gap exists before evolution, and RL-based evolution can hurt Urdu reasoning more than English. Language parity must therefore be an explicit design target, as it does not emerge from self-improvement alone.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">4</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 20</span>
+          <span class="badge tier-low">○ low</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.34121v1">Unstable Action Boundaries in Lethal Drone Agents</a></div>
+        <div class="authors">Jacques Dumora, André-Louis Rochet, Simon Roburin</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.LG · published 2026-11-25 ·
+          <a href="http://arxiv.org/abs/2611.34121v1">abs</a> · <a href="https://arxiv.org/pdf/2611.34121v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Tool-using large language model (LLM) agents raise safety risks that are not captured by text-only refusal behavior, especially when tools can trigger high-impact actions. This concern is salient in military settings, where autonomous weapons raise the possibility of delegating force decisions to software agents. In this work, we study whether a drone agent&#39;s action boundary is stable under changes to the target descriptor. We evaluate recent and popular LLMs in a simulated perception-action pipeline over real-world drone imagery, where models can localize requested targets and invoke a simulated lethal tool. We find two concerning failure modes. First, some LLM agents invoke the lethal tool for ordinary generic descriptors such as \emph{people}, requiring no jailbreak at all. Second, an agent that initially appears conservative under protected descriptors can become unsafe under a simple semantic target shift.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  <article class="card">
+    <div class="card-head">
+      <div class="rank">5</div>
+      <div class="body">
+        <div class="badges">
+          <span class="badge score">score 20</span>
+          <span class="badge tier-low">○ low</span>
+          
+        </div>
+        <div class="title"><a href="http://arxiv.org/abs/2611.34036v1">Few-Shot Adaptation of Vision-Language Models via Agentic Model Editing</a></div>
+        <div class="authors">Yusheng Zhao, Xiao Luo, Zhiping Xiao, Ming Zhang</div>
+        
+        <div class="keywords"><span class="kw">LLM agents</span></div>
+        <div class="meta">
+          cs.AI · published 2026-11-25 ·
+          <a href="http://arxiv.org/abs/2611.34036v1">abs</a> · <a href="https://arxiv.org/pdf/2611.34036v1">pdf</a>
+        </div>
+        <details>
+          <summary>Abstract</summary>
+          <div class="abstract">Few-shot adaptation transfers pretrained Vision-Language Models (VLMs) to new domains using a small set of labeled images. Most methods fit prompts, representations, or classifiers within an adaptation procedure specified in advance. Yet the visual distinctions needed for recognition can differ substantially across domains, motivating the question: Can an LLM agent use few-shot examples and model observations to design the adaptation procedure itself? We propose Agentic Model Editing (AME), an agentic framework that jointly designs input transformations, encoder edits, feature computation, and classifier fitting as an executable, domain-customized adaptation program. The agent inspects images, class semantics, model parameters, intermediate representations, and activations to formulate hypotheses about the target task. It implements and tests candidate programs on the support set, with aggregate validation accuracy guiding refinement and selection. Each program fits a complete domain model that is fixed before testing. The agent and its tools are shared across domains, while each domain receives its own adaptation program. Across eleven datasets with CLIP ViT-B/16, AME achieves the highest average accuracies of 81.2% without back-propagation and 81.9% with back-propagation among the compared methods. Further experiments demonstrate applicability across VLM backbones and LLM agents.</div>
+        </details>
+      </div>
+    </div>
+  </article>
+  
+  
+
+  <footer>
+    Generated by <b>arxiv-radar</b> · 2026-11-26<br>
+    <code>query: (cat:cs.CL OR cat:cs.LG) AND (all:&#34;large language model&#34; OR all:&#34;LLM agents&#34; OR all:&#34;reinforcement learning&#34;)</code>
+  </footer>
+</div>
+</body>
+</html>
